@@ -1,0 +1,564 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring,Spring Security">
+
+
+    <meta name="description" content="一、Spring Security 概述Spring Security是一个功能强大且高度可定制的身份验证和访问控制框架。它实际上是保护基于spring的应用程序的标准，也是一个专注于向Java...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Spring Security教程(一) --- 简单的登录认证 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Security教程(一) --- 简单的登录认证">
+            
+	            Spring Security教程(一) --- 简单的登录认证
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/Spring-Security/">Spring Security</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a> <a class="tag-link" href="/tags/Spring-Security/">Spring Security</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="一、Spring-Security-概述"><a href="#一、Spring-Security-概述" class="headerlink" title="一、Spring Security 概述"></a>一、Spring Security 概述</h1><p>Spring Security是一个功能强大且高度可定制的身份验证和访问控制框架。它实际上是保护基于spring的应用程序的标准，也是一个专注于向Java应用程序提供身份验证和授权的框架。<br>连接：<a href="https://spring.io/projects/spring-security" target="_blank" rel="noopener">Spring Security</a></p>
+<p>项目代码：<a href="https://github.com/Bootcap/spring-security-study-session" target="_blank" rel="noopener">https://github.com/Bootcap/spring-security-study-session</a></p>
+<h1 id="二、环境要求"><a href="#二、环境要求" class="headerlink" title="二、环境要求"></a>二、环境要求</h1><ul>
+<li>JDK ≥1.7</li>
+<li>Maven 3.0+</li>
+<li>IntelliJ IDEA/eclipse<blockquote>
+<p><strong>【提示】</strong>: 本文以 IDEA 和 maven 以及Spring Boot 2.0 为例进行教程</p>
+</blockquote>
+</li>
+</ul>
+<h1 id="三、使用Maven进行构建"><a href="#三、使用Maven进行构建" class="headerlink" title="三、使用Maven进行构建"></a>三、使用Maven进行构建</h1><p>在pom.xml文件中引入相关的jar包（不含security）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;</span><br><span class="line"></span><br><span class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</span><br><span class="line"></span><br><span class="line">  &lt;name&gt;spring-security-study-session&lt;/name&gt;</span><br><span class="line">  &lt;groupId&gt;com.bootcap.session.security&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;spring-security-study-session&lt;/artifactId&gt;</span><br><span class="line">  &lt;version&gt;1.0.0-SNAPSHOT&lt;/version&gt;</span><br><span class="line"></span><br><span class="line">  &lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.1.RELEASE&lt;/version&gt;</span><br><span class="line">  &lt;/parent&gt;</span><br><span class="line"></span><br><span class="line">  &lt;properties&gt;</span><br><span class="line">    &lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;</span><br><span class="line">  &lt;/properties&gt;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  &lt;dependencies&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-starter-web&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;spring-boot-starter-thymeleaf&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;spring-boot-starter-test&lt;/artifactId&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.security&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;spring-security-test&lt;/artifactId&gt;</span><br><span class="line">      &lt;scope&gt;test&lt;/scope&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  &lt;/dependencies&gt;</span><br><span class="line"></span><br><span class="line">  &lt;build&gt;</span><br><span class="line">    &lt;plugins&gt;</span><br><span class="line">      &lt;plugin&gt;</span><br><span class="line">        &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">        &lt;artifactId&gt;spring-boot-maven-plugin&lt;/artifactId&gt;</span><br><span class="line">      &lt;/plugin&gt;</span><br><span class="line">    &lt;/plugins&gt;</span><br><span class="line">  &lt;/build&gt;</span><br><span class="line">&lt;/project&gt;</span><br></pre></td></tr></table></figure></p>
+<p>在项目的src/main/resources下进行配置<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"># 端口号</span><br><span class="line">server:</span><br><span class="line">  port: 8080</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  # thymeleaf配置</span><br><span class="line">  thymeleaf:</span><br><span class="line">    enabled: true</span><br><span class="line">    encoding: UTF-8</span><br><span class="line">    mode: HTML</span><br><span class="line">    servlet:</span><br><span class="line">      content-type: text/html</span><br><span class="line">    prefix: classpath:/templates/</span><br><span class="line">    suffix: .html</span><br></pre></td></tr></table></figure></p>
+<h1 id="四、创建一个不受保护的web页面"><a href="#四、创建一个不受保护的web页面" class="headerlink" title="四、创建一个不受保护的web页面"></a>四、创建一个不受保护的web页面</h1><p>Web页面包含两个简单的视图：index主页和“hello”页面，都定义在Thymeleaf模板中。 </p>
+<h4 id="4-1-Index页面"><a href="#4-1-Index页面" class="headerlink" title="4.1 Index页面"></a>4.1 Index页面</h4><p>路径：src/main/resources/templates/index.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Spring Security Index&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;Index Page&lt;/h1&gt;</span><br><span class="line">    &lt;a th:href=&quot;@&#123;/hello&#125;&quot;&gt;点击前往hello页面&lt;/a&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p><strong>【注意】</strong>: 使用thymeleaf时需要在<html>标签后面加入xmlns=”<a href="http://www.w3.org/1999/xhtml&quot;" target="_blank" rel="noopener">http://www.w3.org/1999/xhtml&quot;</a> xmlns:th=”<a href="http://www.thymeleaf.org&quot;" target="_blank" rel="noopener">http://www.thymeleaf.org&quot;</a> 属性，才能被编译器解析为thymeleaf模板</html></p>
+</blockquote>
+<h4 id="4-2-Hello页面"><a href="#4-2-Hello页面" class="headerlink" title="4.2 Hello页面"></a>4.2 Hello页面</h4><p>路径：src/main/resources/templates/hello.html</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1&gt;Hello Spring Security&lt;/h1&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<p>从上面index.html可以看到包含了一个”/hello”连接点击跳转到hello.html页面的简单流程</p>
+<h1 id="五、配置Spring-MVC视图控制器"><a href="#五、配置Spring-MVC视图控制器" class="headerlink" title="五、配置Spring MVC视图控制器"></a>五、配置Spring MVC视图控制器</h1><h5 id="由于Web应用程序基于Spring-MVC。-因此，需要配置视图控制器来暴露这些模板。"><a href="#由于Web应用程序基于Spring-MVC。-因此，需要配置视图控制器来暴露这些模板。" class="headerlink" title="由于Web应用程序基于Spring MVC。 因此，需要配置视图控制器来暴露这些模板。"></a>由于Web应用程序基于Spring MVC。 因此，需要配置视图控制器来暴露这些模板。</h5><p>路径：src/main/java/com/bootcap/session/security/configuration/TemplateConfig.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;</span><br><span class="line">import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">public class TemplateConfig implements WebMvcConfigurer &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void addViewControllers(ViewControllerRegistry registry) &#123;</span><br><span class="line">        registry.addViewController(&quot;/&quot;).setViewName(&quot;index&quot;);</span><br><span class="line">        registry.addViewController(&quot;/index&quot;).setViewName(&quot;index&quot;);</span><br><span class="line">        registry.addViewController(&quot;/hello&quot;).setViewName(&quot;hello&quot;);</span><br><span class="line">        registry.addViewController(&quot;/login&quot;).setViewName(&quot;login&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="六、配置Spring-Boot启动类"><a href="#六、配置Spring-Boot启动类" class="headerlink" title="六、配置Spring Boot启动类"></a>六、配置Spring Boot启动类</h1><h5 id="6-1-到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring-boot启动类"><a href="#6-1-到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring-boot启动类" class="headerlink" title="6.1 到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring boot启动类"></a>6.1 到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring boot启动类</h5><p>路径：src/main/java/com/bootcap/session/security/app/Application.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.app;</span><br><span class="line"></span><br><span class="line">import org.springframework.boot.SpringApplication;</span><br><span class="line">import org.springframework.boot.autoconfigure.SpringBootApplication;</span><br><span class="line">import org.springframework.context.annotation.ComponentScan;</span><br><span class="line"></span><br><span class="line">@SpringBootApplication</span><br><span class="line">@ComponentScan(basePackages = &#123;&quot;com.bootcap.session.security&quot;&#125;)</span><br><span class="line">public class Application &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="6-2-运行main方法，并在浏览器地址栏输入：http-localhost-8080-如果看到index-html页面，说明已经成功运行"><a href="#6-2-运行main方法，并在浏览器地址栏输入：http-localhost-8080-如果看到index-html页面，说明已经成功运行" class="headerlink" title="6.2 运行main方法，并在浏览器地址栏输入：http://localhost:8080/ 如果看到index.html页面，说明已经成功运行"></a>6.2 运行main方法，并在浏览器地址栏输入：<a href="http://localhost:8080/" target="_blank" rel="noopener">http://localhost:8080/</a> 如果看到index.html页面，说明已经成功运行</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-30eb538d654add71?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="6-3-点击跳转到hello页面链接，无需任何认证即可进行跳转"><a href="#6-3-点击跳转到hello页面链接，无需任何认证即可进行跳转" class="headerlink" title="6.3 点击跳转到hello页面链接，无需任何认证即可进行跳转"></a>6.3 点击跳转到hello页面链接，无需任何认证即可进行跳转</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-867198283265b808?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<blockquote>
+<p>【小窍门】: 为什么要使用@ComponentScan注解：</p>
+<ul>
+<li>如果你的其他包都在使用了@SpringBootApplication注解的main方法所在的包及其下级包，则SpringBoot会自动帮你把其他包都扫描。</li>
+<li>如果你有一些bean所在的包，不在@SpringBootApplication注解main方法的包及其下级包，那么你需要手动加上@ComponentScan注解并指定要寻找的bean所在的包路径。（详见上述代码中package的不同之处）</li>
+</ul>
+</blockquote>
+<h1 id="七、引入并使用Spring-Security"><a href="#七、引入并使用Spring-Security" class="headerlink" title="七、引入并使用Spring Security"></a>七、引入并使用Spring Security</h1><p>在上述的两个视图中，我们希望在访问”/hello”时需要登录才能够进入Hello页面。此时我们可以通过Spring Security来实现。（如果Spring Security在类路径上，则Spring Boot会使用”Basic”认证自动保护所有HTTP请求，也可以自定义设置）</p>
+<h4 id="7-1-pom-xml加入Spring-Security"><a href="#7-1-pom-xml加入Spring-Security" class="headerlink" title="7.1 pom.xml加入Spring Security"></a>7.1 pom.xml加入Spring Security</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependencies&gt;</span><br><span class="line">  ...</span><br><span class="line">    &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;spring-boot-starter-security&lt;/artifactId&gt;</span><br><span class="line">    &lt;/dependency&gt;</span><br><span class="line">  ...</span><br><span class="line">&lt;/dependencies&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="7-2-配置只有认证过的用户才能访问hello-html"><a href="#7-2-配置只有认证过的用户才能访问hello-html" class="headerlink" title="7.2 配置只有认证过的用户才能访问hello.html"></a>7.2 配置只有认证过的用户才能访问hello.html</h4><p>路径：src/main/java/com/bootcap/session/security/configuration/WebSecurityConfig.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;</span><br><span class="line">import org.springframework.security.config.annotation.web.builders.HttpSecurity;</span><br><span class="line">import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class WebSecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http.authorizeRequests()</span><br><span class="line">                .antMatchers(&quot;/&quot;,&quot;/index&quot;).permitAll() // permitAll被允许访问</span><br><span class="line">                .anyRequest().authenticated() // 其余的请求需要认证后才可允许访问</span><br><span class="line">                .and()</span><br><span class="line">            .formLogin()</span><br><span class="line">                .loginPage(&quot;/login&quot;)</span><br><span class="line">                .permitAll()</span><br><span class="line">                .and()</span><br><span class="line">            .logout()</span><br><span class="line">            .permitAll();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">        auth.inMemoryAuthentication() // 在内存中进行身份验证</span><br><span class="line">                .withUser(&quot;user&quot;)</span><br><span class="line">                .password(&quot;password&quot;)</span><br><span class="line">                .roles(&quot;USER&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>【说明】: </p>
+<ul>
+<li><p>WebSecurityConfig类使用了@EnableWebSecurity注解，以启用Spring Security的Web安全支持。</p>
+</li>
+<li><p>configure(HttpSecurity)方法自定义有哪些url需要被认证，哪些不需要。当用户登录后将会被重定向请求到需要身份认证的页面（hello.html），否则在用户未登录的情况下将会跳转到登录页面</p>
+</li>
+<li><p>configure(AuthenticationManagerBuilder)方法用于设置认证的条件保存于内存中，用户名为“user”，密码为“123456”，角色为User。同时该方法也可以修改认证方式为jdbc进行认证</p>
+</li>
+</ul>
+</blockquote>
+<p><strong>【注意】: 使用了Spring Boot 2.0以上的Security会存在There is no PasswordEncoder mapped for the id “null”异常，解决方案见底部“常见问题”</strong></p>
+<h4 id="7-3-创建登录页面（认证时需要用到）"><a href="#7-3-创建登录页面（认证时需要用到）" class="headerlink" title="7.3 创建登录页面（认证时需要用到）"></a>7.3 创建登录页面（认证时需要用到）</h4><p>路径：src/main/resources/templates/login.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;登录页面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.error&#125;&quot;&gt;</span><br><span class="line">    用户名或密码不正确</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.logout&#125;&quot;&gt;</span><br><span class="line">    你已经退出登录</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;form th:action=&quot;@&#123;/login&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 用户名: &lt;input type=&quot;text&quot; name=&quot;username&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 密&amp;nbsp;&amp;nbsp;&amp;nbsp;码: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;&lt;input type=&quot;submit&quot; value=&quot;登录&quot;/&gt;&lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>【说明】: </p>
+<ul>
+<li><p>该登录页面会将用户名和密码以表单形式提交到”/login”。</p>
+</li>
+<li><p>在Spring Security提供了一个拦截请求并验证的过滤器，在用户未通过认证的情况下会重定向到”/login?error”，并且显示相应的错误信息。注销成功后，Spring Security会将地址重定向到”/login?logout”，我们即可在页面中看到相应的登出信息</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="7-4-修改hello-html"><a href="#7-4-修改hello-html" class="headerlink" title="7.4 修改hello.html"></a>7.4 修改hello.html</h4><p>在认证成功后跳转到hello.html页面，我们希望能够看到登录的用户名，同时允许用户退出登录,因此我们需要修改hello.html页面</p>
+<p>路径：src/main/resources/templates/hello.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;Hello&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">    &lt;h1 th:inline=&quot;text&quot;&gt;Hello [[$&#123;#httpServletRequest.remoteUser&#125;]]&lt;/h1&gt;</span><br><span class="line">    &lt;form th:action=&quot;@&#123;/logout&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;退出登录&quot; /&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>【说明】: </p>
+<ul>
+<li><p>我们在hello.html页面中使用了HttpServletRequest#getRemoteUser()的thymeleaf集成来显示用户名。</p>
+</li>
+<li><p>页面中退出登录表单会将请求提交到”/logout”，成功注销后程序会重定向到”/login?logout”。</p>
+</li>
+</ul>
+</blockquote>
+<h4 id="7-5-启动应用程序"><a href="#7-5-启动应用程序" class="headerlink" title="7.5 启动应用程序"></a>7.5 启动应用程序</h4><p>通过文章刚开始的 【配置Spring Boot启动类】模块启动应用程序，这里不再过多介绍。</p>
+<h1 id="八、测试"><a href="#八、测试" class="headerlink" title="八、测试"></a>八、测试</h1><h5 id="8-1-应用启动后-在浏览器中访问-http-localhost-8080-就能访问到Index页面"><a href="#8-1-应用启动后-在浏览器中访问-http-localhost-8080-就能访问到Index页面" class="headerlink" title="8.1 应用启动后, 在浏览器中访问 http://localhost:8080. 就能访问到Index页面"></a>8.1 应用启动后, 在浏览器中访问 <a href="http://localhost:8080" target="_blank" rel="noopener">http://localhost:8080</a>. 就能访问到Index页面</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-4a12e015cf465a57?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="8-2-点击跳转到hello-html页面，会发现没有认证不允许进入，程序自动跳转到登录页"><a href="#8-2-点击跳转到hello-html页面，会发现没有认证不允许进入，程序自动跳转到登录页" class="headerlink" title="8.2 点击跳转到hello.html页面，会发现没有认证不允许进入，程序自动跳转到登录页"></a>8.2 点击跳转到hello.html页面，会发现没有认证不允许进入，程序自动跳转到登录页</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-f5ab19da97f82dfc?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="8-3-我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”-login-error”"><a href="#8-3-我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”-login-error”" class="headerlink" title="8.3 我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”/login?error”"></a>8.3 我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”/login?error”</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-edd9087e0c4414d8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="8-4-下面我们输入正确的账号登录（用户名：user，密码：123456）"><a href="#8-4-下面我们输入正确的账号登录（用户名：user，密码：123456）" class="headerlink" title="8.4 下面我们输入正确的账号登录（用户名：user，密码：123456）"></a>8.4 下面我们输入正确的账号登录（用户名：user，密码：123456）</h5><p>我们会发现在控制台出现了异常（解决方案：详见底部【常见问题】）<br><img src="http://upload-images.jianshu.io/upload_images/5134062-90f4f9e5f1cf06a5?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="8-5-异常解决后我们再进行测试已经可以正常地跳转到hello-html页面，并显示了登录的用户名"><a href="#8-5-异常解决后我们再进行测试已经可以正常地跳转到hello-html页面，并显示了登录的用户名" class="headerlink" title="8.5 异常解决后我们再进行测试已经可以正常地跳转到hello.html页面，并显示了登录的用户名"></a>8.5 异常解决后我们再进行测试已经可以正常地跳转到hello.html页面，并显示了登录的用户名</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-91db2baf78583665?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h5 id="8-6-最后我们点击退出登录，即可完成注销操作（此时地址栏”-login-logout”，并且跳回登录页面提示”你已经退出登录”）"><a href="#8-6-最后我们点击退出登录，即可完成注销操作（此时地址栏”-login-logout”，并且跳回登录页面提示”你已经退出登录”）" class="headerlink" title="8.6 最后我们点击退出登录，即可完成注销操作（此时地址栏”/login?logout”，并且跳回登录页面提示”你已经退出登录”）"></a>8.6 最后我们点击退出登录，即可完成注销操作（此时地址栏”/login?logout”，并且跳回登录页面提示”你已经退出登录”）</h5><p><img src="http://upload-images.jianshu.io/upload_images/5134062-570d027e2fa15a15?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="image"></p>
+<h1 id="九、总结"><a href="#九、总结" class="headerlink" title="九、总结"></a>九、总结</h1><p>恭喜！你已经开发了一个简单的Spring Security程序。</p>
+<h1 id="常见问题"><a href="#常见问题" class="headerlink" title="常见问题"></a>常见问题</h1><h4 id="【问题一】："><a href="#【问题一】：" class="headerlink" title="【问题一】："></a>【问题一】：</h4><p> 在测试中，我们正常登录时候出现了异常：java.lang.IllegalArgumentException: There is no PasswordEncoder mapped for the id “null”</p>
+<blockquote>
+<p>【解答】：通过问题我们知道该异常来自认证信息WebSecurityConfig的方法configure(AuthenticationManagerBuilder)。所以我们查阅官方文档，发现在spring boot 2.0之上使用的是Spring Security 5.0版本，同时也指出使用密码校验时候需要进行密码加密。</p>
+<p>因此，改动如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&gt; 方法1：在Application.java启动类下加入该方法，关闭密码加密校验.(不推荐)</span><br><span class="line">&gt;  @Bean</span><br><span class="line">&gt;     public static PasswordEncoder passwordEncoder() &#123;</span><br><span class="line">&gt;         return NoOpPasswordEncoder.getInstance();</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt;     </span><br><span class="line">&gt; 方法2：在WebSecurityConfig.java类的configure(AuthenticationManagerBuilder)进行如下改动</span><br><span class="line">&gt;  @Override</span><br><span class="line">&gt;     protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">&gt; //      auth.inMemoryAuthentication() // 在内存中进行身份验证</span><br><span class="line">&gt; //              .withUser(&quot;user&quot;)</span><br><span class="line">&gt; //              .password(&quot;password&quot;)</span><br><span class="line">&gt; //              .roles(&quot;USER&quot;);</span><br><span class="line">&gt; </span><br><span class="line">&gt;         auth.inMemoryAuthentication() // 在内存中进行身份验证</span><br><span class="line">&gt;                 .passwordEncoder(new BCryptPasswordEncoder())</span><br><span class="line">&gt;                 .withUser(&quot;user&quot;)</span><br><span class="line">&gt;                 .password(new BCryptPasswordEncoder().encode(&quot;123456&quot;))</span><br><span class="line">&gt;                 .roles(&quot;USER&quot;);</span><br><span class="line">&gt;                 </span><br><span class="line">&gt; //        auth.userDetailsService(userService).passwordEncoder(new BCryptPasswordEncoder());</span><br><span class="line">&gt;     &#125;</span><br><span class="line">&gt;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h1 id="小技巧"><a href="#小技巧" class="headerlink" title="小技巧"></a>小技巧</h1><p>在我们开发的过程中，我们经常会遇到修改一点点东西时候，都需要重启操作来生效。因此，spring boot为我们提供了一个devTool热更新工具，无需重启即可生效</p>
+<h5 id="pom-xml中引入相关jar"><a href="#pom-xml中引入相关jar" class="headerlink" title="pom.xml中引入相关jar"></a>pom.xml中引入相关jar</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">&lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.1.RELEASE&lt;/version&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line">&lt;properties&gt;</span><br><span class="line">    &lt;java.version&gt;1.8&lt;/java.version&gt;</span><br><span class="line">    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;</span><br><span class="line">    &lt;project.reporting.outputEncoding&gt;UTF-8&lt;/project.reporting.outputEncoding&gt;</span><br><span class="line">&lt;/properties&gt;</span><br><span class="line">&lt;dependencies&gt;</span><br><span class="line"> ... </span><br><span class="line">  &lt;dependency&gt;</span><br><span class="line">      &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">      &lt;artifactId&gt;spring-boot-devtools&lt;/artifactId&gt;</span><br><span class="line">  &lt;/dependency&gt;</span><br><span class="line">...</span><br><span class="line">&lt;dependencies&gt;</span><br></pre></td></tr></table></figure>
+<h5 id="如何使用"><a href="#如何使用" class="headerlink" title="如何使用"></a>如何使用</h5><blockquote>
+<p>【提示】: 由于我自己使用的是idea进行开发,因此对eclipse的引入是否需要快捷键并不是很清楚，提供了相关链接</p>
+</blockquote>
+<p>IDEA使用：</p>
+<ul>
+<li>修改了java类的地方，使用Ctrl+Shift+F9进行热更新</li>
+<li>静态页面/模板页面，使用Ctrl+F9进行热更新</li>
+<li>快捷键使用后不生效？前往File-Settings-Compiler-Build Project automatically选项开始idea自动编译</li>
+</ul>
+<p>eclipse使用：</p>
+<ul>
+<li>直接引入</li>
+<li>不生效？<a href="https://www.cnblogs.com/xiangchun/p/8442487.html" target="_blank" rel="noopener">Eclipse热部署</a></li>
+</ul>
+<h1 id="附录：HttpSecurity类的常用方法"><a href="#附录：HttpSecurity类的常用方法" class="headerlink" title="附录：HttpSecurity类的常用方法"></a>附录：HttpSecurity类的常用方法</h1><table>
+<thead>
+<tr>
+<th>方法</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>openidLogin()</td>
+<td>基于OpenId验证</td>
+</tr>
+<tr>
+<td>headers()</td>
+<td>将安全头添加到响应</td>
+</tr>
+<tr>
+<td>cors()</td>
+<td>跨域配置</td>
+</tr>
+<tr>
+<td>sessionManagement()</td>
+<td>session会话管理</td>
+</tr>
+<tr>
+<td>portMapper()</td>
+<td>配置一个PortMapper(HttpSecurity#(getSharedObject(class)))，供SecurityConfigurer对象使用 PortMapper 从 HTTP 重定向到 HTTPS 或者从 HTTPS 重定向到 HTTP。默认情况下，Spring Security使用一个PortMapperImpl映射 HTTP 端口8080到 HTTPS 端口8443，HTTP 端口80到 HTTPS 端口443</td>
+</tr>
+<tr>
+<td>jee()</td>
+<td>配置容器预认证，默认为Servlet容器进行管理</td>
+</tr>
+<tr>
+<td>x509()</td>
+<td>配置x509认证</td>
+</tr>
+<tr>
+<td>rememberMe()</td>
+<td>配置“记住我”的验证</td>
+</tr>
+<tr>
+<td>authorizeRequests()</td>
+<td>允许HttpServletRequest限制访问</td>
+</tr>
+<tr>
+<td>requestCache()</td>
+<td>允许配置请求缓存</td>
+</tr>
+<tr>
+<td>exceptionHandling()</td>
+<td>允许配置错误处理</td>
+</tr>
+<tr>
+<td>logout()</td>
+<td>退出登录。访问URL”/ logout”，使HTTP Session无效来清除用户，清除已配置的任何#rememberMe()身份验证，清除SecurityContextHolder，然后重定向到”/login?logout”</td>
+</tr>
+<tr>
+<td>anonymous()</td>
+<td>允许配置匿名用户访问。默认情况下，匿名用户将使用org.springframework.security.authentication.AnonymousAuthenticationToken表示，并包含角色 “ROLE_ANONYMOUS”</td>
+</tr>
+<tr>
+<td>formLogin()</td>
+<td>指定用于表单身份验证。</td>
+</tr>
+<tr>
+<td>oauth2Login()</td>
+<td>用于OAuth 2.0 或OpenID的身份验证</td>
+</tr>
+<tr>
+<td>requiresChannel()</td>
+<td>配置通道安全。</td>
+</tr>
+<tr>
+<td>httpBasic()</td>
+<td>配置Http Basic验证</td>
+</tr>
+<tr>
+<td>addFilterAt()</td>
+<td>在指定的Filter类位置添加过滤器</td>
+</tr>
+</tbody>
+</table>
+
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/05/22/Spring-Security-教程（二）---基于数据库信息进行验证/" class="pre-post btn btn-default" title="Spring Security教程(二) --- 基于数据库信息进行验证">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Spring Security教程(二) --- 基于数据库信息进行验证</span>
+        </a>
+    
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、Spring-Security-概述"><span class="toc-text">一、Spring Security 概述</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、环境要求"><span class="toc-text">二、环境要求</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、使用Maven进行构建"><span class="toc-text">三、使用Maven进行构建</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、创建一个不受保护的web页面"><span class="toc-text">四、创建一个不受保护的web页面</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-Index页面"><span class="toc-text">4.1 Index页面</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-Hello页面"><span class="toc-text">4.2 Hello页面</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#五、配置Spring-MVC视图控制器"><span class="toc-text">五、配置Spring MVC视图控制器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#由于Web应用程序基于Spring-MVC。-因此，需要配置视图控制器来暴露这些模板。"><span class="toc-text">由于Web应用程序基于Spring MVC。 因此，需要配置视图控制器来暴露这些模板。</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#六、配置Spring-Boot启动类"><span class="toc-text">六、配置Spring Boot启动类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#6-1-到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring-boot启动类"><span class="toc-text">6.1 到了这一步，我们需要将项目运行查看是否无异常，才进行下一步操作，因此需要配置spring boot启动类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-2-运行main方法，并在浏览器地址栏输入：http-localhost-8080-如果看到index-html页面，说明已经成功运行"><span class="toc-text">6.2 运行main方法，并在浏览器地址栏输入：http://localhost:8080/ 如果看到index.html页面，说明已经成功运行</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#6-3-点击跳转到hello页面链接，无需任何认证即可进行跳转"><span class="toc-text">6.3 点击跳转到hello页面链接，无需任何认证即可进行跳转</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#七、引入并使用Spring-Security"><span class="toc-text">七、引入并使用Spring Security</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#7-1-pom-xml加入Spring-Security"><span class="toc-text">7.1 pom.xml加入Spring Security</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-2-配置只有认证过的用户才能访问hello-html"><span class="toc-text">7.2 配置只有认证过的用户才能访问hello.html</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-3-创建登录页面（认证时需要用到）"><span class="toc-text">7.3 创建登录页面（认证时需要用到）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-4-修改hello-html"><span class="toc-text">7.4 修改hello.html</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#7-5-启动应用程序"><span class="toc-text">7.5 启动应用程序</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#八、测试"><span class="toc-text">八、测试</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#8-1-应用启动后-在浏览器中访问-http-localhost-8080-就能访问到Index页面"><span class="toc-text">8.1 应用启动后, 在浏览器中访问 http://localhost:8080. 就能访问到Index页面</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-2-点击跳转到hello-html页面，会发现没有认证不允许进入，程序自动跳转到登录页"><span class="toc-text">8.2 点击跳转到hello.html页面，会发现没有认证不允许进入，程序自动跳转到登录页</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-3-我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”-login-error”"><span class="toc-text">8.3 我们输入错误的信息会提示用户名或密码不正确，同时地址栏的地址也变成了”/login?error”</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-4-下面我们输入正确的账号登录（用户名：user，密码：123456）"><span class="toc-text">8.4 下面我们输入正确的账号登录（用户名：user，密码：123456）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-5-异常解决后我们再进行测试已经可以正常地跳转到hello-html页面，并显示了登录的用户名"><span class="toc-text">8.5 异常解决后我们再进行测试已经可以正常地跳转到hello.html页面，并显示了登录的用户名</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#8-6-最后我们点击退出登录，即可完成注销操作（此时地址栏”-login-logout”，并且跳回登录页面提示”你已经退出登录”）"><span class="toc-text">8.6 最后我们点击退出登录，即可完成注销操作（此时地址栏”/login?logout”，并且跳回登录页面提示”你已经退出登录”）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#九、总结"><span class="toc-text">九、总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#常见问题"><span class="toc-text">常见问题</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#【问题一】："><span class="toc-text">【问题一】：</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#小技巧"><span class="toc-text">小技巧</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#pom-xml中引入相关jar"><span class="toc-text">pom.xml中引入相关jar</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#如何使用"><span class="toc-text">如何使用</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#附录：HttpSecurity类的常用方法"><span class="toc-text">附录：HttpSecurity类的常用方法</span></a></li>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>

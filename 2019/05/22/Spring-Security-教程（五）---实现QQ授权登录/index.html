@@ -1,0 +1,413 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring,Spring Security">
+
+
+    <meta name="description" content="一、准备1.1 先在QQ互联申请成为开发者，并创建应用申请APPId 和AppKey。1.2 查看官方接入流程文档。
+以下是自己申请后的密钥，贡献出来方便各位测试
+
+APP ID：1013642...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Spring Security教程(五)--- 实现QQ授权登录 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Security教程(五)--- 实现QQ授权登录">
+            
+	            Spring Security教程(五)--- 实现QQ授权登录
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/Spring-Security/">Spring Security</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a> <a class="tag-link" href="/tags/Spring-Security/">Spring Security</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="一、准备"><a href="#一、准备" class="headerlink" title="一、准备"></a>一、准备</h1><p>1.1 先在<a href="https://connect.qq.com/index.html" target="_blank" rel="noopener">QQ互联</a>申请成为开发者，并创建应用申请APPId 和AppKey。<br>1.2 查看<a href="http://wiki.connect.qq.com/网站应用接入流程" target="_blank" rel="noopener">官方接入流程文档</a>。</p>
+<p>以下是自己申请后的密钥，贡献出来方便各位测试</p>
+<blockquote>
+<p>APP ID：101364240<br>APP Key：ef27b7a6ca651a3609dd47f21e385955<br>回调地址：<a href="http://127.0.0.1/login/qq" target="_blank" rel="noopener">http://127.0.0.1/login/qq</a></p>
+</blockquote>
+<p>项目代码：<a href="https://github.com/Bootcap/spring-security-study-session" target="_blank" rel="noopener">https://github.com/Bootcap/spring-security-study-session</a></p>
+<h1 id="二、开发步骤"><a href="#二、开发步骤" class="headerlink" title="二、开发步骤"></a>二、开发步骤</h1><h5 id="前提，在上篇Spring-Security-四-权限动态修改-的"><a href="#前提，在上篇Spring-Security-四-权限动态修改-的" class="headerlink" title="前提，在上篇Spring Security (四) - 权限动态修改 的"></a>前提，在上篇<a href="https://www.jianshu.com/p/d540fcbe3a81" target="_blank" rel="noopener">Spring Security (四) - 权限动态修改</a> 的</h5><p> pom.xml 基础上加入(或直接查看源码)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;dependency&gt;</span><br><span class="line">  &lt;groupId&gt;org.glassfish.jersey.media&lt;/groupId&gt;</span><br><span class="line">  &lt;artifactId&gt;jersey-media-json-jackson&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-1-首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类"><a href="#2-1-首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类" class="headerlink" title="2.1 首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类"></a>2.1 首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.filter;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * QQ认证过滤器</span><br><span class="line"> * 2018-12-18 10:57</span><br><span class="line"> */</span><br><span class="line">public class QQAuthenticationFilter extends AbstractAuthenticationProcessingFilter &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * response_type 返回类型</span><br><span class="line">     */</span><br><span class="line">    private final static String RESPONSE_TYPE = &quot;code&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * grant_type 由腾讯提供</span><br><span class="line">     */</span><br><span class="line">    private final static String GRANT_TYPE = &quot;authorization_code&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * client_id 由腾讯提供(即AppId)</span><br><span class="line">     */</span><br><span class="line">    static final String CLIENT_ID = &quot;101364240&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * client_secret 由腾讯提供(即App Key)</span><br><span class="line">     */</span><br><span class="line">    private final static String CLIENT_SECRET = &quot;ef27b7a6ca651a3609dd47f21e385955&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * redirect_uri 腾讯回调地址</span><br><span class="line">     */</span><br><span class="line">    private final static String REDIRECT_URI = &quot;http://127.0.0.1/login/qq&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取 access_token_url 的 API</span><br><span class="line">     */</span><br><span class="line">    private final static String ACCESS_TOKEN_URL = &quot;https://graph.qq.com/oauth2.0/token&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取 OpenID url地址</span><br><span class="line">     */</span><br><span class="line">    private final static String OPENID_URL = &quot;https://graph.qq.com/oauth2.0/me?access_token=%s&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取 token 的地址拼接</span><br><span class="line">     */</span><br><span class="line">    private final static String TOKEN_ACCESS_API = &quot;%s?grant_type=%s&amp;client_id=%s&amp;client_secret=%s&amp;code=%s&amp;redirect_uri=%s&quot;;</span><br><span class="line"></span><br><span class="line">    public QQAuthenticationFilter(String defaultFilterProcessesUrl)&#123;</span><br><span class="line">        super(new AntPathRequestMatcher(defaultFilterProcessesUrl, &quot;GET&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws AuthenticationException, IOException, ServletException &#123;</span><br><span class="line">        UsernamePasswordAuthenticationToken authenticationToken =  null;</span><br><span class="line">        String code = httpServletRequest.getParameter(RESPONSE_TYPE);</span><br><span class="line">//        System.out.println(&quot;输出response_type:&quot; + code);</span><br><span class="line">        String accessTokenURL = String.format(TOKEN_ACCESS_API,ACCESS_TOKEN_URL,GRANT_TYPE,CLIENT_ID,CLIENT_SECRET,code,REDIRECT_URI);</span><br><span class="line">//        System.out.println(&quot;accessTokenURL:&quot; +accessTokenURL);</span><br><span class="line">        QQAccessToken qqAccessToken = getQQAccessToken(accessTokenURL);</span><br><span class="line">        if (null != qqAccessToken)&#123;</span><br><span class="line">            String openId = getOpenId(qqAccessToken.getAccessToken());</span><br><span class="line">//            System.out.println(&quot;输出openId:&quot; + openId);</span><br><span class="line">            if (null != openId)&#123;</span><br><span class="line">                authenticationToken = new UsernamePasswordAuthenticationToken(qqAccessToken.getAccessToken(),openId);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        // 返回验证结果</span><br><span class="line">        return this.getAuthenticationManager().authenticate(authenticationToken);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 开始请求获取QQToken</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private QQAccessToken getQQAccessToken(String accessTokenURL)&#123;</span><br><span class="line">        Assert.notNull(accessTokenURL,&quot;accessTokenURL不能为空&quot;);</span><br><span class="line">        RestTemplate template = new RestTemplate();</span><br><span class="line">        QQAccessToken qqAccessToken = new QQAccessToken();</span><br><span class="line">        String[] results = template.getForObject(accessTokenURL, String.class).split(&quot;&amp;&quot;);</span><br><span class="line">        if (results.length == 3)&#123;</span><br><span class="line">            String accessToken = results[0].replace(&quot;access_token=&quot;, &quot;&quot;);</span><br><span class="line">            Integer expiresIn = Integer.valueOf(results[1].replace(&quot;expires_in=&quot;, &quot;&quot;));</span><br><span class="line">            String refreshToken = results[2].replace(&quot;refresh_token=&quot;, &quot;&quot;);</span><br><span class="line">            qqAccessToken.setAccessToken(accessToken);</span><br><span class="line">            qqAccessToken.setExpiresIn(expiresIn);</span><br><span class="line">            qqAccessToken.setRefreshToken(refreshToken);</span><br><span class="line">        &#125;</span><br><span class="line">        return qqAccessToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取用户的唯一OpenId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private String getOpenId(String accessToken)&#123;</span><br><span class="line">        RestTemplate template = new RestTemplate();</span><br><span class="line">        String openIdResult = template.getForObject(String.format(OPENID_URL,accessToken), String.class);</span><br><span class="line">        Pattern pattern = Pattern.compile(&quot;\&quot;openid\&quot;:\&quot;(.*)\&quot;&quot;);</span><br><span class="line">        Matcher matcher = pattern.matcher(openIdResult);</span><br><span class="line">        while (matcher.find())&#123;</span><br><span class="line">            return matcher.group(1);</span><br><span class="line">        &#125;</span><br><span class="line">        return null;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么要继承AbstractAuthenticationProcessingFilter类，请前往<a href="https://www.jianshu.com/p/88a64cc025ac" target="_blank" rel="noopener">Spring Security（二） - 基于数据库实现校验</a><br>的流程图。</p>
+<h5 id="2-2-创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象"><a href="#2-2-创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象" class="headerlink" title="2.2 创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象"></a>2.2 创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.manager;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 管理授权类</span><br><span class="line"> * 2018-12-18 14:47</span><br><span class="line"> */</span><br><span class="line">public class QQAuthenticatioManager implements AuthenticationManager &#123;</span><br><span class="line"></span><br><span class="line">    private static final List&lt;GrantedAuthority&gt; AUTHORITIES = new ArrayList&lt;&gt;();</span><br><span class="line"></span><br><span class="line">    public QQAuthenticatioManager()&#123;&#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取用户信息</span><br><span class="line">     */</span><br><span class="line">    private final static String USER_INFO_URL = &quot;https://graph.qq.com/user/get_user_info?access_token=%s&amp;oauth_consumer_key=%s&amp;openid=%s&quot;;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * client_id 由腾讯提供(即AppId)</span><br><span class="line">     */</span><br><span class="line">    static final String CLIENT_ID = &quot;101364240&quot;;</span><br><span class="line"></span><br><span class="line">    static &#123;</span><br><span class="line">        AUTHORITIES.add(new SimpleGrantedAuthority(&quot;ROLE_USER&quot;));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public Authentication authenticate(Authentication authentication) throws AuthenticationException &#123;</span><br><span class="line">        QQUserInfo qqUserInfo = null;</span><br><span class="line">        if (authentication.getName() != null &amp;&amp; authentication.getCredentials() != null)&#123;</span><br><span class="line">            qqUserInfo = getUserInfo(authentication.getName(), (String) authentication.getCredentials());</span><br><span class="line">        &#125;</span><br><span class="line">//        System.out.println(&quot;输出用户信息：&quot; +qqUserInfo.toString());</span><br><span class="line">        return new UsernamePasswordAuthenticationToken(qqUserInfo,null,AUTHORITIES);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 获取QQ授权后的基本信息</span><br><span class="line">     * @param accessToken</span><br><span class="line">     * @param openId</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    private QQUserInfo getUserInfo(String accessToken, String openId) &#123;</span><br><span class="line">        String url = String.format(USER_INFO_URL,accessToken,CLIENT_ID,openId);</span><br><span class="line">        RestTemplate template = new RestTemplate();</span><br><span class="line">        String userInfoResult = template.getForObject(url, String.class);</span><br><span class="line">        QQUserInfo qqUserInfo = jsonToObject(userInfoResult, QQUserInfo.class);</span><br><span class="line">        return qqUserInfo;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    private &lt;T&gt; T jsonToObject(String json,Class&lt;T&gt; targetClass)&#123;</span><br><span class="line">        ObjectMapper objectMapper = new ObjectMapper();</span><br><span class="line">        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);</span><br><span class="line">        try &#123;</span><br><span class="line">            return objectMapper.readValue(json,targetClass);</span><br><span class="line">        &#125; catch (IOException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">            return null;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>为什么要实现AuthenticationManager类?因为在AbstractAuthenticationProcessingFilter.doFilter()方法中调用了this.attemptAuthentication(request, response) 中实现的方法（即2.1中我们自定义的Filter类的实现方法）。因此在我们自定义类中中调用了 this.getAuthenticationManager().authenticate(authRequest)，所以需要实现该类。</p>
+<h5 id="2-3-在WebSecurityConfig类中添加自定义过滤器"><a href="#2-3-在WebSecurityConfig类中添加自定义过滤器" class="headerlink" title="2.3 在WebSecurityConfig类中添加自定义过滤器"></a>2.3 在WebSecurityConfig类中添加自定义过滤器</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * WebSecurityConfig 配置文件</span><br><span class="line"> * 2018-12-10 11:03</span><br><span class="line"> */</span><br><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class WebSecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http.authorizeRequests()</span><br><span class="line">                .antMatchers(&quot;/&quot;).permitAll()</span><br><span class="line">                .antMatchers(&quot;/user/**&quot;).hasRole(&quot;USER&quot;)</span><br><span class="line">                .and()</span><br><span class="line">                .formLogin().loginPage(&quot;/login&quot;).defaultSuccessUrl(&quot;/user&quot;)</span><br><span class="line">                .and()</span><br><span class="line">                .logout().logoutUrl(&quot;/logout&quot;).logoutSuccessUrl(&quot;/login&quot;);</span><br><span class="line">        // 在 UsernamePasswordAuthenticationFilter 前添加 QQAuthenticationFilter</span><br><span class="line">        http.addFilterAt(qqAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">                auth.inMemoryAuthentication() // 在内存中进行身份验证</span><br><span class="line">                .passwordEncoder(new BCryptPasswordEncoder())</span><br><span class="line">                .withUser(&quot;user&quot;)</span><br><span class="line">                .password(new BCryptPasswordEncoder().encode(&quot;123456&quot;))</span><br><span class="line">                .roles(&quot;USER&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 自定义 QQ登录 过滤器</span><br><span class="line">     */</span><br><span class="line">    private QQAuthenticationFilter qqAuthenticationFilter()&#123;</span><br><span class="line">        QQAuthenticationFilter authenticationFilter = new QQAuthenticationFilter(&quot;/login/qq&quot;);</span><br><span class="line">        SimpleUrlAuthenticationSuccessHandler simpleUrlAuthenticationSuccessHandler = new SimpleUrlAuthenticationSuccessHandler();</span><br><span class="line">        simpleUrlAuthenticationSuccessHandler.setAlwaysUseDefaultTargetUrl(true);</span><br><span class="line">        simpleUrlAuthenticationSuccessHandler.setDefaultTargetUrl(&quot;/user&quot;);</span><br><span class="line">        authenticationFilter.setAuthenticationSuccessHandler(simpleUrlAuthenticationSuccessHandler);</span><br><span class="line">        authenticationFilter.setAuthenticationManager(new QQAuthenticatioManager());</span><br><span class="line">        return authenticationFilter;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="2-4-修改Controller和页面"><a href="#2-4-修改Controller和页面" class="headerlink" title="2.4 修改Controller和页面"></a>2.4 修改Controller和页面</h5><p>2.4.1 Controller配置详见【<a href="https://github.com/Bootcap/spring-security-study-session" target="_blank" rel="noopener">项目代码spring-security-05</a>】<br>2.4.2 login.html页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;登录页面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;登录页面&lt;/h1&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.error&#125;&quot;&gt;</span><br><span class="line">    用户名或密码不正确</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.logout&#125;&quot;&gt;</span><br><span class="line">    你已经退出登录</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;form th:action=&quot;@&#123;/login&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 用户名: &lt;input type=&quot;text&quot; name=&quot;username&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 密&amp;nbsp;&amp;nbsp;&amp;nbsp;码: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;br/&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;登录&quot;/&gt;</span><br><span class="line">        &lt;br/&gt;</span><br><span class="line">        &lt;a  href=&quot;https://graph.qq.com/oauth2.0/authorize?response_type=code&amp;client_id=101364240&amp;redirect_uri=http://127.0.0.1/login/qq&amp;state=test&quot;&gt;&lt;img style=&quot;padding-top: 5px&quot; src=&quot;/static/imgs/qqLogin.png&quot; /&gt;&lt;/a&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>2.4.3 user.html页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line">    &lt;title&gt;用户界面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class=&quot;container&quot; style=&quot;margin-top: 60px&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div style=&quot;text-align: center; margin-top: 10%&quot;&gt;</span><br><span class="line">        &lt;img th:src=&quot;$&#123;avatar&#125;&quot; th:alt=&quot;$&#123;avatar&#125;&quot; /&gt;</span><br><span class="line">        &lt;p th:text=&quot;$&#123;username&#125;&quot; style=&quot;margin-top: 25px; font-size: 20px; color: crimson&quot;&gt;&lt;/p&gt;</span><br><span class="line">        &lt;form th:action=&quot;@&#123;/logout&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">            &lt;button style=&quot;margin-top: 20px&quot;&gt;退出登录&lt;/button&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-5-补充示例中需要用到的实体类"><a href="#2-5-补充示例中需要用到的实体类" class="headerlink" title="2.5 补充示例中需要用到的实体类"></a>2.5 补充示例中需要用到的实体类</h5><p>2.5.1 QQAccessToken.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.entity;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 2018-12-18 11:47</span><br><span class="line"> */</span><br><span class="line">public class QQAccessToken &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 授权accessToken</span><br><span class="line">     */</span><br><span class="line">    private String accessToken;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 该access token的有效期，单位为秒。</span><br><span class="line">     */</span><br><span class="line">    private Integer expiresIn;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 在授权自动续期步骤中，获取新的Access_Token时需要提供的参数。</span><br><span class="line">     */</span><br><span class="line">    private String refreshToken;</span><br><span class="line"></span><br><span class="line">    public String getAccessToken() &#123;</span><br><span class="line">        return accessToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setAccessToken(String accessToken) &#123;</span><br><span class="line">        this.accessToken = accessToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public int getExpiresIn() &#123;</span><br><span class="line">        return expiresIn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setExpiresIn(Integer expiresIn) &#123;</span><br><span class="line">        this.expiresIn = expiresIn;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getRefreshToken() &#123;</span><br><span class="line">        return refreshToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setRefreshToken(String refreshToken) &#123;</span><br><span class="line">        this.refreshToken = refreshToken;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;QQAccessToken&#123;&quot; +</span><br><span class="line">                &quot;accessToken=&apos;&quot; + accessToken + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, expiresIn=&quot; + expiresIn +</span><br><span class="line">                &quot;, refreshToken=&apos;&quot; + refreshToken + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>2.5.2 QQUserInfo.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.entity;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * qq信息实体</span><br><span class="line"> * 2018-12-18 15:34</span><br><span class="line"> */</span><br><span class="line">public class QQUserInfo &#123;</span><br><span class="line">    /**</span><br><span class="line">     * 昵称</span><br><span class="line">     */</span><br><span class="line">    private String nickname;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 性别</span><br><span class="line">     */</span><br><span class="line">    private String gender;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * QQ头像</span><br><span class="line">     */</span><br><span class="line">    private String figureurl_qq_1;</span><br><span class="line"></span><br><span class="line">    public String getNickname() &#123;</span><br><span class="line">        return nickname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setNickname(String nickname) &#123;</span><br><span class="line">        this.nickname = nickname;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getGender() &#123;</span><br><span class="line">        return gender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setGender(String gender) &#123;</span><br><span class="line">        this.gender = gender;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getFigureurl_qq_1() &#123;</span><br><span class="line">        return figureurl_qq_1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setFigureurl_qq_1(String figureurl_qq_1) &#123;</span><br><span class="line">        this.figureurl_qq_1 = figureurl_qq_1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;QQUserInfo&#123;&quot; +</span><br><span class="line">                &quot;nickname=&apos;&quot; + nickname + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, gender=&apos;&quot; + gender + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, figureurl_qq_1=&apos;&quot; + figureurl_qq_1 + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="三、测试"><a href="#三、测试" class="headerlink" title="三、测试"></a>三、测试</h1><p>3.1 启动项目并且浏览器访问:127.0.0.1/user，会自动跳转到登录页面<br><img src="https://upload-images.jianshu.io/upload_images/5134062-95b920f05ba78bd4.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt><br>【注意】：我们发现我们使用的静态资源qq登录的图片，不会显示,同时浏览器控制台报404，说图片未找到。<br>【解决方法】：在configuration包下新建一个WebMvcConfig.java类设置我们静态资源的路径<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">@Configuration</span><br><span class="line">public class WebMvcConfig extends WebMvcConfigurationSupport &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void addResourceHandlers(ResourceHandlerRegistry registry) &#123;</span><br><span class="line">        registry.addResourceHandler(&quot;/static/**&quot;).addResourceLocations(&quot;classpath:/static/&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>3.2 再次启动并访问页面，已经可以正常显示<br><img src="https://upload-images.jianshu.io/upload_images/5134062-07e4464b3feb9080.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>3.3 使用qq登录<br><img src="https://upload-images.jianshu.io/upload_images/5134062-c68772701df74d0b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/05/23/Spring Security常见问题解决方案/" class="pre-post btn btn-default" title="Spring Security常见问题解决方案">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Spring Security常见问题解决方案</span>
+        </a>
+    
+    
+        <a href="/2019/05/22/Spring-Security-教程（四）---权限动态修改/" class="next-post btn btn-default" title="Spring Security教程(四)--- 权限动态修改">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Spring Security教程(四)--- 权限动态修改</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、准备"><span class="toc-text">一、准备</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、开发步骤"><span class="toc-text">二、开发步骤</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#前提，在上篇Spring-Security-四-权限动态修改-的"><span class="toc-text">前提，在上篇Spring Security (四) - 权限动态修改 的</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类"><span class="toc-text">2.1 首先自定义QQAuthenticationFilter过滤器继承AbstractAuthenticationProcessingFilter类</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象"><span class="toc-text">2.2 创建QQAuthenticationManager通过accessToken和openId获取基本信息，并生成新的Authentication认证对象</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-3-在WebSecurityConfig类中添加自定义过滤器"><span class="toc-text">2.3 在WebSecurityConfig类中添加自定义过滤器</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-4-修改Controller和页面"><span class="toc-text">2.4 修改Controller和页面</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-5-补充示例中需要用到的实体类"><span class="toc-text">2.5 补充示例中需要用到的实体类</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#三、测试"><span class="toc-text">三、测试</span></a></li>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>

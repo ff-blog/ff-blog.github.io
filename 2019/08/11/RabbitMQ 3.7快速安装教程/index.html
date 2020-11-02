@@ -1,0 +1,421 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="RabbitMQ">
+
+
+    <meta name="description" content="一、简介RabbitMQ是实现了高级消息队列协议（AMQP）的开源消息代理软件（亦称面向消息的中间件）。RabbitMQ服务器是用Erlang语言编写的，而集群和故障转移是构建在开放电信平台框架...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>RabbitMQ 3.7快速安装教程 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="RabbitMQ 3.7快速安装教程">
+            
+	            RabbitMQ 3.7快速安装教程
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/RabbitMQ/">RabbitMQ</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/RabbitMQ/">RabbitMQ</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/08/11</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="一、简介"><a href="#一、简介" class="headerlink" title="一、简介"></a>一、简介</h1><p>RabbitMQ是实现了高级消息队列协议（AMQP）的开源消息代理软件（亦称面向消息的中间件）。RabbitMQ服务器是用Erlang语言编写的，而集群和故障转移是构建在开放电信平台框架上的。所有主要的编程语言均有与代理接口通讯的客户端库。</p>
+<h1 id="二、准备工作"><a href="#二、准备工作" class="headerlink" title="二、准备工作"></a>二、准备工作</h1><p>1、rabbitmq-server-3.7.17.exe <a href="https://www.rabbitmq.com/download.html" target="_blank" rel="noopener">官网下载</a><br>2、otp_win64_22.0.exe <a href="https://www.erlang.org/downloads" target="_blank" rel="noopener">官网下载</a></p>
+<h1 id="三、下载安装包"><a href="#三、下载安装包" class="headerlink" title="三、下载安装包"></a>三、下载安装包</h1><p>1、首先我们需要准备一个rabbitmq的安装包和Erlang安装包，若没有则百度搜索进入官网页面进行下载。</p>
+<p><img src="/img/resources/rabbitmq/1.png" alt="rabbitMQ下载"></p>
+<p><img src="/img/resources/rabbitmq/2.png" alt="rabbitMQ下载"></p>
+<p>2、为什么还要下载Erlang？</p>
+<p>这是应为rabbit是基于erlang语言开发的程序，所以提示我们缺少这个运行环境，此时我们直接点击确定进入erlang下载页面，根据自己的系统版本下载安装包。</p>
+<p><img src="/img/resources/rabbitmq/3.png" alt="Erlang下载"></p>
+<h1 id="三、开始安装"><a href="#三、开始安装" class="headerlink" title="三、开始安装"></a>三、开始安装</h1><p>1、安装包准备好友，首先运行安装Erlang安装程序（注意安装在中文路径下）。</p>
+<p>2、按照步骤一直点击Next，中间可以选择更换安装路径，但不能是中文路径，点击“Install”后等待安装完成即可点击“Close”关闭。</p>
+<p><img src="/img/resources/rabbitmq/4.png" alt="Erlang安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/5.png" alt="Erlang安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/6.png" alt="Erlang安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/7.png" alt="Erlang安装步骤"></p>
+<p>3、安装完Erlang程序后，接着我们直接双击打开rabbitMQ安装程序（注意不能安装在中文路径下），按照步骤一直点击Next，中间可以选择更换安装路径，但不能是中文路径，点击“Install”后等待安装完成即可点击“Finish”关闭。</p>
+<p><img src="/img/resources/rabbitmq/8.png" alt="rabbitMQ安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/9.png" alt="rabbitMQ安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/10.png" alt="rabbitMQ安装步骤"></p>
+<p><img src="/img/resources/rabbitmq/11.png" alt="rabbitMQ安装步骤"></p>
+<h1 id="四、最后配置"><a href="#四、最后配置" class="headerlink" title="四、最后配置"></a>四、最后配置</h1><p>1、到第三步步后，rabbit就已经安装按成了，而且一般完成后，rabbitmq会自动开启。</p>
+<p>2、但是RabbitMQ安装后默认是不启动管理模块的，所以需要配置将管理模块启动，才可以通过浏览器访问：localhost:15672，命令如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 若没有配置环境变量，运行命令时需要在安装rabbitmq目录下的sbin文件夹执行</span><br><span class="line">rabbitmqctl start_app</span><br><span class="line">rabbitmq-plugins enable rabbitmq_management</span><br><span class="line">rabbitmqctl stop</span><br><span class="line">// 注意：每次运行完买那个了需要重启rabbitmq，以生效</span><br></pre></td></tr></table></figure>
+<p>3、配置完成后直接浏览器访问：localhost:15672，能够进入到如下页面则表示rabbitmq安装完成！！！</p>
+<p><img src="/img/resources/rabbitmq/12.png" alt="安装完成"></p>
+<p>默认用户名和密码均是：guest</p>
+<h1 id="五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）"><a href="#五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）" class="headerlink" title="五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）"></a>五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）</h1><p>rabbitmq在windows下运行后立马停止的问题为log和数据库存在中文路径导致的，可以根据如下命令解决：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 停止服务，然后执行以下3条语句：</span><br><span class="line">rabbitmq-service.bat remove </span><br><span class="line">set RABBITMQ_BASE=D:\install3\rabbitmq\rabbitmq_server-3.7.8\data</span><br><span class="line">rabbitmq-service.bat install</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p><strong>推荐阅读：</strong><br><a href="https://blog.ffspace.cn/categories/%E5%90%8E%E7%AB%AF/Spring-Security/">Spring Security系列教程</a><br><a href="https://blog.ffspace.cn/2019/08/09/elk/Spring%20Boot%20%E9%9B%86%E6%88%90%20ELK%20+%20logback%20%E5%AE%9E%E7%8E%B0%E6%97%A5%E5%BF%97%E9%87%87%E9%9B%86/">Spring Boot 集成 ELK + logback 实现日志采集</a></p>
+</blockquote>
+
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/10/08/随笔/Java使用Tess4J 实现简单的图像识别(Maven版)/" class="pre-post btn btn-default" title="Java使用Tess4J 实现简单的图像识别(Maven版)">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Java使用Tess4J 实现简单的图像识别(Maven版)</span>
+        </a>
+    
+    
+        <a href="/2019/08/09/elk/Spring Boot 集成 ELK + logback 实现日志采集/" class="next-post btn btn-default" title="Spring Boot 集成 ELK + logback 实现日志采集">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Spring Boot 集成 ELK + logback 实现日志采集</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#一、简介"><span class="toc-text">一、简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#二、准备工作"><span class="toc-text">二、准备工作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、下载安装包"><span class="toc-text">三、下载安装包</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、开始安装"><span class="toc-text">三、开始安装</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、最后配置"><span class="toc-text">四、最后配置</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）"><span class="toc-text">五、运行rabbitMQ被立刻停止解决方案（作者遇到的问题之一）</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>

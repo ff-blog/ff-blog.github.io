@@ -1,0 +1,430 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring,Spring Security">
+
+
+    <meta name="description" content="介绍本篇文章将讲解使用Spring Security + Mybatis + Mysql数据库实现简单的登录校验，以及密码加密校验。
+项目代码：https://github.com/Bootca...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Spring Security教程(二) --- 基于数据库信息进行验证 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Security教程(二) --- 基于数据库信息进行验证">
+            
+	            Spring Security教程(二) --- 基于数据库信息进行验证
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/Spring-Security/">Spring Security</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a> <a class="tag-link" href="/tags/Spring-Security/">Spring Security</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/22</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="介绍"><a href="#介绍" class="headerlink" title="介绍"></a>介绍</h1><p>本篇文章将讲解使用Spring Security + Mybatis + Mysql数据库实现简单的登录校验，以及密码加密校验。</p>
+<p>项目代码：<a href="https://github.com/Bootcap/spring-security-study-session" target="_blank" rel="noopener">https://github.com/Bootcap/spring-security-study-session</a></p>
+<h1 id="一、创建数据库和需要的表结构"><a href="#一、创建数据库和需要的表结构" class="headerlink" title="一、创建数据库和需要的表结构"></a>一、创建数据库和需要的表结构</h1><h5 id="1-1-创建数据库"><a href="#1-1-创建数据库" class="headerlink" title="1.1 创建数据库"></a>1.1 创建数据库</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">create database user;</span><br><span class="line">use user;</span><br></pre></td></tr></table></figure>
+<h5 id="1-2-创建user-info表，执行sql脚本生成"><a href="#1-2-创建user-info表，执行sql脚本生成" class="headerlink" title="1.2 创建user_info表，执行sql脚本生成"></a>1.2 创建user_info表，执行sql脚本生成</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">SET NAMES utf8mb4;</span><br><span class="line">SET FOREIGN_KEY_CHECKS = 0;</span><br><span class="line"></span><br><span class="line">DROP TABLE IF EXISTS `user_info`;</span><br><span class="line">CREATE TABLE `user_info`  (</span><br><span class="line">  `user_id` int(11) NOT NULL AUTO_INCREMENT COMMENT &apos;主键，自增&apos;,</span><br><span class="line">  `user_name` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT &apos;用户名&apos;,</span><br><span class="line">  `user_password` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT &apos;用户密码&apos;,</span><br><span class="line">  `user_roles` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT &apos;用户角色&apos;,</span><br><span class="line">  PRIMARY KEY (`user_id`) USING BTREE</span><br><span class="line">) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;</span><br><span class="line"></span><br><span class="line">INSERT INTO `user_info` VALUES (1, &apos;1&apos;, &apos;1&apos;, &apos;ROLE_USER&apos;);</span><br><span class="line">INSERT INTO `user_info` VALUES (2, &apos;user&apos;, &apos;123456&apos;, &apos;ROLE_USER&apos;);</span><br><span class="line">INSERT INTO `user_info` VALUES (3, &apos;user2&apos;, &apos;$2a$10$RHWoRd6hPXffZemAD7Gp6ehhf929etTHVGm7JGBeJTNQIgVURnSb.&apos;, &apos;ROLE_USER&apos;);</span><br><span class="line"></span><br><span class="line">SET FOREIGN_KEY_CHECKS = 1;</span><br></pre></td></tr></table></figure>
+<h1 id="二、修改配置"><a href="#二、修改配置" class="headerlink" title="二、修改配置"></a>二、修改配置</h1><h5 id="2-1-修改pom-xml"><a href="#2-1-修改pom-xml" class="headerlink" title="2.1 修改pom.xml"></a>2.1 修改pom.xml</h5><p>在上篇文章所需jar包的基础上引入mysql和mybatis相关包。<a href="https://github.com/Bootcap/spring-security-study-session/blob/master/spring-security-02/pom.xml" target="_blank" rel="noopener">查看完整pom.xml</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;!-- Mybatis --&gt;</span><br><span class="line"> &lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;org.mybatis.spring.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mybatis-spring-boot-starter&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;1.3.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;mysql&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;mysql-connector-java&lt;/artifactId&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure></p>
+<h5 id="2-2-修改application-yml"><a href="#2-2-修改application-yml" class="headerlink" title="2.2 修改application.yml"></a>2.2 修改application.yml</h5><p>在上篇文章resources/application.yml的基础上增加”数据源配置”和”日志配置”<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"># 端口号</span><br><span class="line">server:</span><br><span class="line">  port: 8080</span><br><span class="line"></span><br><span class="line">spring:</span><br><span class="line">  # thymeleaf配置</span><br><span class="line">  thymeleaf:</span><br><span class="line">    enabled: true</span><br><span class="line">    encoding: UTF-8</span><br><span class="line">    mode: HTML</span><br><span class="line">    servlet:</span><br><span class="line">      content-type: text/html</span><br><span class="line">    prefix: classpath:/templates/</span><br><span class="line">    suffix: .html</span><br><span class="line">  # 数据源配置</span><br><span class="line">  datasource:</span><br><span class="line">    url: jdbc:mysql://127.0.0.1:3306/user?useUnicode=true&amp;characterEncoding=utf8&amp;useSSL=false # 修改为自己数据库所在ip地址</span><br><span class="line">    driver-class-name: com.mysql.jdbc.Driver</span><br><span class="line">    username: root # 默认用户名，修改为自己的数据库用户名</span><br><span class="line">    password: # 填写自己的密码</span><br><span class="line"></span><br><span class="line">logging:</span><br><span class="line">  level:</span><br><span class="line">    root: INFO</span><br><span class="line">    org.springframework.web: INFO</span><br><span class="line">    org.springframework.security: INFO</span><br></pre></td></tr></table></figure></p>
+<h1 id="三、创建CRUD操作的相关类"><a href="#三、创建CRUD操作的相关类" class="headerlink" title="三、创建CRUD操作的相关类"></a>三、创建CRUD操作的相关类</h1><p>经过上面的配置修改后，还需要有一套完整的CRUD操作，本篇文章仅介绍注册和登录校验，因此只有注册和登录校验操作。</p>
+<h5 id="3-1-创建数据库实体类（UserInfo-java）"><a href="#3-1-创建数据库实体类（UserInfo-java）" class="headerlink" title="3.1 创建数据库实体类（UserInfo.java）"></a>3.1 创建数据库实体类（UserInfo.java）</h5><p> 路径：com/bootcap/session/security/entity/UserInfo.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.entity;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 数据库实体类</span><br><span class="line"> * 2018-12-10 16:21</span><br><span class="line"> */</span><br><span class="line">public class UserInfo &#123;</span><br><span class="line">    private Integer id;</span><br><span class="line">    private String userName;</span><br><span class="line">    private String password;</span><br><span class="line">    private String roles;</span><br><span class="line"></span><br><span class="line">    public Integer getId() &#123;</span><br><span class="line">        return id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setId(Integer id) &#123;</span><br><span class="line">        this.id = id;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getUserName() &#123;</span><br><span class="line">        return userName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setUserName(String userName) &#123;</span><br><span class="line">        this.userName = userName;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getPassword() &#123;</span><br><span class="line">        return password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setPassword(String password) &#123;</span><br><span class="line">        this.password = password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public String getRoles() &#123;</span><br><span class="line">        return roles;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    public void setRoles(String roles) &#123;</span><br><span class="line">        this.roles = roles;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public String toString() &#123;</span><br><span class="line">        return &quot;UserInfo&#123;&quot; +</span><br><span class="line">                &quot;id=&quot; + id +</span><br><span class="line">                &quot;, userName=&apos;&quot; + userName + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, password=&apos;&quot; + password + &apos;\&apos;&apos; +</span><br><span class="line">                &quot;, roles=&apos;&quot; + roles + &apos;\&apos;&apos; +</span><br><span class="line">                &apos;&#125;&apos;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-2-创建映射文件（UserInfoMapper-java）"><a href="#3-2-创建映射文件（UserInfoMapper-java）" class="headerlink" title="3.2 创建映射文件（UserInfoMapper.java）"></a>3.2 创建映射文件（UserInfoMapper.java）</h5><blockquote>
+<p>【提示】: 本文直接使用mybatis的注解形式进行<br>sql编写</p>
+</blockquote>
+<p>路径：<br>com/bootcap/session/security/mapper/UserInfoMapper.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.mapper;</span><br><span class="line"></span><br><span class="line">import com.bootcap.session.security.entity.UserInfo;</span><br><span class="line">import org.apache.ibatis.annotations.*;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * UserInfo映射类</span><br><span class="line"> * 2018-12-10 16:26</span><br><span class="line"> * 两个注解区别，网络上说是使用该@Repository注解需要配置xml映射文件，但是小编更改后并未出现异常。</span><br><span class="line"> */</span><br><span class="line">// @Mapper</span><br><span class="line">@Repository</span><br><span class="line">public interface UserInfoMapper &#123;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新增</span><br><span class="line">     * @param userInfo</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    @Insert(&quot;insert into user_info(user_name,user_password,user_roles) values(#&#123;userName&#125;,#&#123;password&#125;, #&#123;roles&#125;)&quot;)</span><br><span class="line">    int insert(UserInfo userInfo);</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询</span><br><span class="line">     */</span><br><span class="line">    @Select(&quot;select user_name as userName,user_password as password,user_roles as roles,user_id as id from user_info where user_name = #&#123;userName&#125;&quot;)</span><br><span class="line">    UserInfo selectByUserName(@Param(&quot;userName&quot;) String userName);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="3-3-创建业务层类（UserInfoService-java）"><a href="#3-3-创建业务层类（UserInfoService-java）" class="headerlink" title="3.3 创建业务层类（UserInfoService.java）"></a>3.3 创建业务层类（UserInfoService.java）</h5><p>路径：com/bootcap/session/security/mapper/UserInfoService.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.service;</span><br><span class="line"></span><br><span class="line">import com.bootcap.session.security.constant.RolesContant;</span><br><span class="line">import com.bootcap.session.security.entity.UserInfo;</span><br><span class="line">import com.bootcap.session.security.mapper.UserInfoMapper;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * service业务层</span><br><span class="line"> * 2018-12-10 16:37</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class UserInfoService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    UserInfoMapper userInfoMapper;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 新增用户</span><br><span class="line">     * @param userInfo</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public boolean insert(UserInfo userInfo) &#123;</span><br><span class="line">        UserInfo userInfo1 = userInfoMapper.selectByUserName(userInfo.getUserName());</span><br><span class="line">        if (userInfo1 != null)&#123;</span><br><span class="line">            return false;</span><br><span class="line">        &#125;</span><br><span class="line">        userInfo.setRoles(RolesContant.USER);</span><br><span class="line">        // 加密保存密码到数据库</span><br><span class="line">        userInfo.setPassword(new BCryptPasswordEncoder().encode(userInfo.getPassword()));</span><br><span class="line">        int result = userInfoMapper.insert(userInfo);</span><br><span class="line">        return result == 1;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    /**</span><br><span class="line">     * 查询用户</span><br><span class="line">     * @param username</span><br><span class="line">     * @return</span><br><span class="line">     */</span><br><span class="line">    public UserInfo selectUserInfo(String username) &#123;</span><br><span class="line">        return userInfoMapper.selectByUserName(username);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<blockquote>
+<p>【说明】: 由于业务代码使用了常量类，因此需要创建一个枚举类RolesContant.java，内容如下: public static final String USER = “ROLE_USER”;</p>
+</blockquote>
+<h5 id="3-4-创建控制层（UserController-java）"><a href="#3-4-创建控制层（UserController-java）" class="headerlink" title="3.4 创建控制层（UserController.java）"></a>3.4 创建控制层（UserController.java）</h5><p>路径：com/bootcap/session/security/mapper/UserController.java<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.controller;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 2018-12-10 17:02</span><br><span class="line"> */</span><br><span class="line">@Controller</span><br><span class="line">public class UserController &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    UserInfoService userInfoService;</span><br><span class="line"></span><br><span class="line">    @PostMapping(&quot;/register&quot;)</span><br><span class="line">    public String doRegister(UserInfo userInfo)&#123;</span><br><span class="line">        boolean insert = userInfoService.insert(userInfo);</span><br><span class="line">        if (insert)&#123;</span><br><span class="line">            return &quot;redirect:sign?success&quot;;</span><br><span class="line">        &#125;</span><br><span class="line">        return &quot;redirect:sign?error&quot;;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @GetMapping(&quot;/user&quot;)</span><br><span class="line">    public String user(@AuthenticationPrincipal Principal principal, Model model)&#123;</span><br><span class="line">        model.addAttribute(&quot;username&quot;, principal.getName());</span><br><span class="line">        return &quot;user/user&quot;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h1 id="四、配置Spring-Security获取数据库数据进行校验"><a href="#四、配置Spring-Security获取数据库数据进行校验" class="headerlink" title="四、配置Spring Security获取数据库数据进行校验"></a>四、配置Spring Security获取数据库数据进行校验</h1><p><img src="https://upload-images.jianshu.io/upload_images/5134062-6242996b91be3782.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<blockquote>
+<p>【说明】: 从流程图中我们可以得到，Spring Security最终使用UserDetailsService.loadUserByUsername()方法连接数据库获取数据并返回给校验类进行校验，因此我们需要在项目中实现该接口。</p>
+</blockquote>
+<h5 id="4-1-创建MyUserDetailsService-java类并实现UsesrDetailsService"><a href="#4-1-创建MyUserDetailsService-java类并实现UsesrDetailsService" class="headerlink" title="4.1 创建MyUserDetailsService.java类并实现UsesrDetailsService"></a>4.1 创建MyUserDetailsService.java类并实现UsesrDetailsService</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">import com.bootcap.session.security.service.UserInfoService;</span><br><span class="line">import com.bootcap.session.security.entity.UserInfo;</span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.security.core.authority.SimpleGrantedAuthority;</span><br><span class="line">import org.springframework.security.core.userdetails.User;</span><br><span class="line">import org.springframework.security.core.userdetails.UserDetails;</span><br><span class="line">import org.springframework.security.core.userdetails.UserDetailsService;</span><br><span class="line">import org.springframework.security.core.userdetails.UsernameNotFoundException;</span><br><span class="line">import org.springframework.stereotype.Service;</span><br><span class="line"></span><br><span class="line">import java.util.ArrayList;</span><br><span class="line">import java.util.List;</span><br><span class="line">/**</span><br><span class="line"> * 自定义登录校验Service</span><br><span class="line"> * 2018-12-10 17:23</span><br><span class="line"> */</span><br><span class="line">@Service</span><br><span class="line">public class MyUserDetailsService implements UserDetailsService &#123;</span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    UserInfoService userInfoService;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException &#123;</span><br><span class="line">        UserInfo userInfo = userInfoService.selectUserInfo(userName);</span><br><span class="line">        if (userInfo == null) &#123;</span><br><span class="line">            throw new UsernameNotFoundException(&quot;用户不存在&quot;); // 若不存在抛出用户不存在异常</span><br><span class="line">        &#125;</span><br><span class="line">        // 权限字符串转化</span><br><span class="line">        List&lt;SimpleGrantedAuthority&gt; simpleGrantedAuthorities = new ArrayList&lt;&gt;();</span><br><span class="line">        String[] roles = userInfo.getRoles().split(&quot;,&quot;);// 获取后的Roles必须有ROLE_前缀，否则会抛Access is denied无权限异常</span><br><span class="line">        for (String role : roles) &#123;</span><br><span class="line">            simpleGrantedAuthorities.add(new SimpleGrantedAuthority(role));</span><br><span class="line">        &#125;</span><br><span class="line">        // 交给security进行验证并返回</span><br><span class="line">        return new User(userInfo.getUserName(), userInfo.getPassword(), simpleGrantedAuthorities);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-2-修改WebSecurityConfig-java调用"><a href="#4-2-修改WebSecurityConfig-java调用" class="headerlink" title="4.2 修改WebSecurityConfig.java调用"></a>4.2 修改WebSecurityConfig.java调用</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.configuration;</span><br><span class="line"></span><br><span class="line">import org.springframework.beans.factory.annotation.Autowired;</span><br><span class="line">import org.springframework.context.annotation.Configuration;</span><br><span class="line">import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;</span><br><span class="line">import org.springframework.security.config.annotation.web.builders.HttpSecurity;</span><br><span class="line">import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;</span><br><span class="line">import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;</span><br><span class="line">import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 2018-12-10 11:03</span><br><span class="line"> */</span><br><span class="line">@Configuration</span><br><span class="line">@EnableWebSecurity</span><br><span class="line">public class WebSecurityConfig extends WebSecurityConfigurerAdapter &#123;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    @Autowired</span><br><span class="line">    MyUserDetailsService myUserDetailsService;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">        http.authorizeRequests()</span><br><span class="line">                .antMatchers(&quot;/&quot;,&quot;/index&quot;).permitAll() // permitAll被允许访问</span><br><span class="line">                .antMatchers(&quot;/user/**&quot;).hasRole(&quot;USER&quot;)// 指定所有user页面需要USER角色才能访问</span><br><span class="line">            .and()</span><br><span class="line">                .formLogin().loginPage(&quot;/login&quot;).defaultSuccessUrl(&quot;/user&quot;)</span><br><span class="line">            .and()</span><br><span class="line">                .logout().logoutUrl(&quot;/logout&quot;).logoutSuccessUrl(&quot;/login&quot;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    protected void configure(AuthenticationManagerBuilder auth) throws Exception &#123;</span><br><span class="line">//        auth.inMemoryAuthentication() // 在内存中进行身份验证</span><br><span class="line">//                .passwordEncoder(new BCryptPasswordEncoder())</span><br><span class="line">//                .withUser(&quot;user&quot;)</span><br><span class="line">//                .password(new BCryptPasswordEncoder().encode(&quot;123456&quot;))</span><br><span class="line">//                .roles(&quot;USER&quot;);</span><br><span class="line"></span><br><span class="line">// 修改的地方，将上篇文章的内存验证改为获取数据库，并使用了密码加密         </span><br><span class="line">auth.userDetailsService(myUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="扩展：对密码进行加密"><a href="#扩展：对密码进行加密" class="headerlink" title="扩展：对密码进行加密"></a>扩展：对密码进行加密</h5><p>1、修改WebSecurityConfig.configure()方法<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">auth.userDetailsService(myUserDetailsService).passwordEncoder(new BCryptPasswordEncoder());</span><br></pre></td></tr></table></figure></p>
+<p>2、在UserInfoService.insert()方法对password字段进行加密存储<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">public boolean insert(UserInfo userInfo) &#123;</span><br><span class="line">       UserInfo userInfo1 = userInfoMapper.selectByUserName(userInfo.getUserName());</span><br><span class="line">       if (userInfo1 != null)&#123;</span><br><span class="line">           return false;</span><br><span class="line">       &#125;</span><br><span class="line">       userInfo.setRoles(RolesContant.USER);</span><br><span class="line">       userInfo.setPassword(new BCryptPasswordEncoder().encode(userInfo.getPassword()));</span><br><span class="line">       int result = userInfoMapper.insert(userInfo);</span><br><span class="line">       return result == 1;</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure></p>
+<h5 id="4-3-修改TemplateConfig-java（用于新增的注册页面）"><a href="#4-3-修改TemplateConfig-java（用于新增的注册页面）" class="headerlink" title="4.3 修改TemplateConfig.java（用于新增的注册页面）"></a>4.3 修改TemplateConfig.java（用于新增的注册页面）</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">@Configuration</span><br><span class="line">public class TemplateConfig implements WebMvcConfigurer &#123;</span><br><span class="line"></span><br><span class="line">    @Override</span><br><span class="line">    public void addViewControllers(ViewControllerRegistry registry) &#123;</span><br><span class="line">        registry.addViewController(&quot;/&quot;).setViewName(&quot;index&quot;);</span><br><span class="line">        registry.addViewController(&quot;/index&quot;).setViewName(&quot;index&quot;);</span><br><span class="line">        registry.addViewController(&quot;/hello&quot;).setViewName(&quot;hello&quot;);</span><br><span class="line">        registry.addViewController(&quot;/login&quot;).setViewName(&quot;login&quot;);</span><br><span class="line">        // 新增注册页面</span><br><span class="line">       registry.addViewController(&quot;/sign&quot;).setViewName(&quot;register&quot;);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="4-4-上述配置完成后，我们需要增加和修改几个页面用于测试"><a href="#4-4-上述配置完成后，我们需要增加和修改几个页面用于测试" class="headerlink" title="4.4 上述配置完成后，我们需要增加和修改几个页面用于测试"></a>4.4 上述配置完成后，我们需要增加和修改几个页面用于测试</h5><p>4.4.1 修改login.html（增加跳转到注册连接）<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;</span><br><span class="line">&lt;html lang=&quot;en&quot; xmlns=&quot;http://www.w3.org/1999/xhtml&quot; xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;UTF-8&quot;&gt;</span><br><span class="line">    &lt;title&gt;登录页面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;h1&gt;登录页面&lt;/h1&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.error&#125;&quot;&gt;</span><br><span class="line">    用户名或密码不正确</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;div th:if=&quot;$&#123;param.logout&#125;&quot;&gt;</span><br><span class="line">    你已经退出登录</span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;form th:action=&quot;@&#123;/login&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 用户名: &lt;input type=&quot;text&quot; name=&quot;username&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;&lt;label&gt; 密&amp;nbsp;&amp;nbsp;&amp;nbsp;码: &lt;input type=&quot;password&quot; name=&quot;password&quot;/&gt; &lt;/label&gt;&lt;/div&gt;</span><br><span class="line">    &lt;div&gt;</span><br><span class="line">        &lt;input type=&quot;submit&quot; value=&quot;登录&quot;/&gt;</span><br><span class="line">        &lt;a th:href=&quot;@&#123;/sign&#125;&quot;&gt;注册&lt;/a&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">&lt;/form&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>4.4.2 新增register.html注册页面<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line">    &lt;title&gt;注册&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;div class=&quot;panel-body&quot;&gt;</span><br><span class="line">    &lt;h1&gt;注册页面&lt;/h1&gt;</span><br><span class="line">    &lt;form th:action=&quot;@&#123;/register&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            账号: &lt;input type=&quot;text&quot; name=&quot;userName&quot; id=&quot;username&quot; placeholder=&quot;账号&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            密码: &lt;input type=&quot;password&quot; class=&quot;form-control&quot; name=&quot;password&quot; id=&quot;password&quot; placeholder=&quot;密码&quot;&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;br&gt;</span><br><span class="line">        &lt;div th:if=&quot;$&#123;param.error&#125;&quot;&gt;</span><br><span class="line">            &lt;p&gt;注册失败，账号已存在！&lt;/p&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div th:if=&quot;$&#123;param.success&#125;&quot;&gt;</span><br><span class="line">            &lt;p&gt;注册成功，可以登录了！&lt;/p&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">        &lt;div&gt;</span><br><span class="line">            &lt;button type=&quot;submit&quot; class=&quot;btn btn-primary btn-block&quot;&gt;注册&lt;/button&gt;</span><br><span class="line">            &lt;a href=&quot;/login&quot;&gt;返回登录页面&lt;/a&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/form&gt;</span><br><span class="line">&lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<p>4.4.3 新增user.html（用于登录后跳转的页面）<br>路径：templates/user/user.html<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&lt;html xmlns:th=&quot;http://www.thymeleaf.org&quot;&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;meta charset=&quot;utf-8&quot;&gt;</span><br><span class="line">    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1&quot;&gt;</span><br><span class="line">    &lt;title&gt;用户界面&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line"></span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;div class=&quot;container&quot; style=&quot;margin-top: 60px&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;div style=&quot;text-align: center; margin-top: 10%&quot;&gt;</span><br><span class="line">        &lt;p th:text=&quot;$&#123;username&#125;&quot; style=&quot;margin-top: 25px; font-size: 20px; color: crimson&quot;&gt;&lt;/p&gt;</span><br><span class="line">        &lt;form th:action=&quot;@&#123;/logout&#125;&quot; method=&quot;post&quot;&gt;</span><br><span class="line">            &lt;button style=&quot;margin-top: 20px&quot;&gt;退出登录&lt;/button&gt;</span><br><span class="line">        &lt;/form&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line"></span><br><span class="line">&lt;/div&gt;</span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure></p>
+<h1 id="五、启动运行"><a href="#五、启动运行" class="headerlink" title="五、启动运行"></a>五、启动运行</h1><p>至此，基本修改已经完毕，这时候可以启动Application.java启动运行了？答案：不能！！！</p>
+<blockquote>
+<p>【提示】: 本项目的启动类是在app包下，因此我们配置的mapper映射文件的@Repository注解为mybatis的注解，所以boot不会自动注入，因此需要加入@MapperScan(basePackages = “com.bootcap.session.security.mapper”)<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.app;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 启动类</span><br><span class="line"> * 2018-12-10 11:03</span><br><span class="line"> */</span><br><span class="line">@SpringBootApplication</span><br><span class="line">@ComponentScan(basePackages = &#123;&quot;com.bootcap.session.security&quot;&#125;)</span><br><span class="line">@MapperScan(basePackages = &quot;com.bootcap.session.security.mapper&quot;)</span><br><span class="line">public class Application &#123;</span><br><span class="line">    public static void main(String[] args) &#123;</span><br><span class="line">        SpringApplication.run(Application.class,args);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<h1 id="六、测试结果"><a href="#六、测试结果" class="headerlink" title="六、测试结果"></a>六、测试结果</h1><p>6.1 项目启动后，浏览器访问：localhost:8080/user,会发现直接跳转到登录页<br><img src="https://upload-images.jianshu.io/upload_images/5134062-2f4a576add65da55.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<p>6.2 目前我们没有账号，点击注册按钮进行注册，注册好后。我们使用注册的账号进行登录 ，可以正常进入user页面<br><img src="https://upload-images.jianshu.io/upload_images/5134062-211e476aa23eb9a2.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt></p>
+<h1 id="七、扩展篇-自定义Filter过滤器"><a href="#七、扩展篇-自定义Filter过滤器" class="headerlink" title="七、扩展篇 - 自定义Filter过滤器"></a>七、扩展篇 - 自定义Filter过滤器</h1><h5 id="7-1-创建两个自定义Filter过滤器（BeforeFilter-java和BeforeFilter-java）"><a href="#7-1-创建两个自定义Filter过滤器（BeforeFilter-java和BeforeFilter-java）" class="headerlink" title="7.1 创建两个自定义Filter过滤器（BeforeFilter.java和BeforeFilter.java）"></a>7.1 创建两个自定义Filter过滤器（BeforeFilter.java和BeforeFilter.java）</h5><p>路径：com/bootcap/session/security/filter<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.filter;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * BeforeFilter</span><br><span class="line"> * 2018-12-12 10:44</span><br><span class="line"> */</span><br><span class="line">public class BeforeFilter extends GenericFilterBean &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        System.out.println(&quot;在 UsernamePasswordAuthenticationFilter 前添加 BeforeLoginFilter&quot;);</span><br><span class="line">        // 继续调用 Filter 链</span><br><span class="line">        filterChain.doFilter(servletRequest, servletResponse);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">package com.bootcap.session.security.filter;</span><br><span class="line">/**</span><br><span class="line"> * AfterCsrfFilter</span><br><span class="line"> * 2018-12-12 10:46</span><br><span class="line"> */</span><br><span class="line">public class AfterCsrfFilter extends GenericFilterBean &#123;</span><br><span class="line">    @Override</span><br><span class="line">    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException &#123;</span><br><span class="line">        System.out.println(&quot;在 CsrfFilter 后添加 AfterCsrfFilter&quot;);</span><br><span class="line">        filterChain.doFilter(servletRequest,servletResponse);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="7-2-在WebSecurityConfig-configure-方法中加入调用"><a href="#7-2-在WebSecurityConfig-configure-方法中加入调用" class="headerlink" title="7.2 在WebSecurityConfig.configure()方法中加入调用"></a>7.2 在WebSecurityConfig.configure()方法中加入调用</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line">    protected void configure(HttpSecurity http) throws Exception &#123;</span><br><span class="line">         ... 省略部分代码 ...</span><br><span class="line">        // 在 UsernamePasswordAuthenticationFilter 前添加 BeforeLoginFilter</span><br><span class="line">        http.addFilterBefore(new BeforeFilter(), UsernamePasswordAuthenticationFilter.class);</span><br><span class="line"></span><br><span class="line">        // 在 CsrfFilter 后添加 AfterCsrfFilter</span><br><span class="line">        http.addFilterAfter(new AfterCsrfFilter(), CsrfFilter.class);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<h5 id="7-3-运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序"><a href="#7-3-运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序" class="headerlink" title="7.3 运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序"></a>7.3 运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序</h5><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">2018-12-12 10:49:34.607  INFO 1060 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring FrameworkServlet &apos;dispatcherServlet&apos;</span><br><span class="line">2018-12-12 10:49:34.607  INFO 1060 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet &apos;dispatcherServlet&apos;: initialization started</span><br><span class="line">2018-12-12 10:49:34.611  INFO 1060 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : FrameworkServlet &apos;dispatcherServlet&apos;: initialization completed in 4 ms</span><br><span class="line">在 CsrfFilter 后添加 AfterCsrfFilter</span><br><span class="line">在 UsernamePasswordAuthenticationFilter 前添加 BeforeLoginFilter</span><br><span class="line">在 CsrfFilter 后添加 AfterCsrfFilter</span><br><span class="line">在 UsernamePasswordAuthenticationFilter 前添加 BeforeLoginFilter</span><br></pre></td></tr></table></figure>
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/05/22/Spring-Security-教程（三）---基于登录认证记住我实例/" class="pre-post btn btn-default" title="Spring Security教程(三) --- 基于登录认证记住我实例">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Spring Security教程(三) --- 基于登录认证记住我实例</span>
+        </a>
+    
+    
+        <a href="/2019/05/22/Spring-Security-教程（一）---简单的登录认证/" class="next-post btn btn-default" title="Spring Security教程(一) --- 简单的登录认证">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Spring Security教程(一) --- 简单的登录认证</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#介绍"><span class="toc-text">介绍</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一、创建数据库和需要的表结构"><span class="toc-text">一、创建数据库和需要的表结构</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#1-1-创建数据库"><span class="toc-text">1.1 创建数据库</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#1-2-创建user-info表，执行sql脚本生成"><span class="toc-text">1.2 创建user_info表，执行sql脚本生成</span></a></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#二、修改配置"><span class="toc-text">二、修改配置</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#2-1-修改pom-xml"><span class="toc-text">2.1 修改pom.xml</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#2-2-修改application-yml"><span class="toc-text">2.2 修改application.yml</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#三、创建CRUD操作的相关类"><span class="toc-text">三、创建CRUD操作的相关类</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#3-1-创建数据库实体类（UserInfo-java）"><span class="toc-text">3.1 创建数据库实体类（UserInfo.java）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-2-创建映射文件（UserInfoMapper-java）"><span class="toc-text">3.2 创建映射文件（UserInfoMapper.java）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-3-创建业务层类（UserInfoService-java）"><span class="toc-text">3.3 创建业务层类（UserInfoService.java）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#3-4-创建控制层（UserController-java）"><span class="toc-text">3.4 创建控制层（UserController.java）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#四、配置Spring-Security获取数据库数据进行校验"><span class="toc-text">四、配置Spring Security获取数据库数据进行校验</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#4-1-创建MyUserDetailsService-java类并实现UsesrDetailsService"><span class="toc-text">4.1 创建MyUserDetailsService.java类并实现UsesrDetailsService</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-2-修改WebSecurityConfig-java调用"><span class="toc-text">4.2 修改WebSecurityConfig.java调用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#扩展：对密码进行加密"><span class="toc-text">扩展：对密码进行加密</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-3-修改TemplateConfig-java（用于新增的注册页面）"><span class="toc-text">4.3 修改TemplateConfig.java（用于新增的注册页面）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#4-4-上述配置完成后，我们需要增加和修改几个页面用于测试"><span class="toc-text">4.4 上述配置完成后，我们需要增加和修改几个页面用于测试</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#五、启动运行"><span class="toc-text">五、启动运行</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#六、测试结果"><span class="toc-text">六、测试结果</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#七、扩展篇-自定义Filter过滤器"><span class="toc-text">七、扩展篇 - 自定义Filter过滤器</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#7-1-创建两个自定义Filter过滤器（BeforeFilter-java和BeforeFilter-java）"><span class="toc-text">7.1 创建两个自定义Filter过滤器（BeforeFilter.java和BeforeFilter.java）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-2-在WebSecurityConfig-configure-方法中加入调用"><span class="toc-text">7.2 在WebSecurityConfig.configure()方法中加入调用</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#7-3-运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序"><span class="toc-text">7.3 运行程序并访问任意可访问页面，我们能够的到两个过滤器的执行顺序</span></a></li></ol></li>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,399 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring,Spring Security">
+
+
+    <meta name="description" content="1、Spring Security 登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。2...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Spring Security常见问题解决方案 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Security常见问题解决方案">
+            
+	            Spring Security常见问题解决方案
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/Spring-Security/">Spring Security</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a> <a class="tag-link" href="/tags/Spring-Security/">Spring Security</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/05/23</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h3 id="1、Spring-Security-登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。"><a href="#1、Spring-Security-登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。" class="headerlink" title="1、Spring Security 登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。"></a>1、Spring Security 登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。</h3><h3 id="2、不管是用户名不存在、密码错误等抛出的异常都是org-springframework-security-authentication-BadCredentialsException-Bad-credentials。"><a href="#2、不管是用户名不存在、密码错误等抛出的异常都是org-springframework-security-authentication-BadCredentialsException-Bad-credentials。" class="headerlink" title="2、不管是用户名不存在、密码错误等抛出的异常都是org.springframework.security.authentication.BadCredentialsException: Bad credentials。"></a>2、不管是用户名不存在、密码错误等抛出的异常都是org.springframework.security.authentication.BadCredentialsException: Bad credentials。</h3><h4 id="方案一：（来自网络）"><a href="#方案一：（来自网络）" class="headerlink" title="方案一：（来自网络）"></a>方案一：（来自网络）</h4><p>1.既然系统是捕获UsernameNotFoundException类型的异常后再抛出新的BadCredentialsException异常，那么我们干脆就不抛出UsernameNotFoundException异常。</p>
+<p>我们模仿UsernameNotFoundException，创建自己的MyUsernameNotFoundException异常类。</p>
+<p>2.在MyUserDetailsService类的loadUserByUsername方法抛出我们自己定义的MyUsernameNotFoundException异常。</p>
+<h4 id="方案二："><a href="#方案二：" class="headerlink" title="方案二："></a>方案二：</h4><p>在MyUserDetailsService类的loadUserByUsername方法直接抛出BadCredentialsException异常，这样就不需要创建自己的MyUsernameNotFoundException异常类。</p>
+<p>好了，这样在页面通过[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]，就能显示我们自定义的异常信息了。</p>
+<h3 id="3、跳转到-user页面时候出现org-springframework-security-access-AccessDeniedException-Access-is-denied"><a href="#3、跳转到-user页面时候出现org-springframework-security-access-AccessDeniedException-Access-is-denied" class="headerlink" title="3、跳转到/user页面时候出现org.springframework.security.access.AccessDeniedException: Access is denied"></a>3、跳转到/user页面时候出现org.springframework.security.access.AccessDeniedException: Access is denied</h3><p>WebSecurityConfig代码</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">@Override</span><br><span class="line"></span><br><span class="line">protected void configure(HttpSecurity http) throws Exception&#123;</span><br><span class="line"></span><br><span class="line">    http.authorizeRequests()</span><br><span class="line"></span><br><span class="line">            .antMatchers(&quot;/&quot;,&quot;/index&quot;).permitAll() // permitAll被允许访问</span><br><span class="line"></span><br><span class="line">            .antMatchers(&quot;/user/**&quot;).hasRole(&quot;USER&quot;)// 指定所有user页面需要USER角色才能访问</span><br><span class="line"></span><br><span class="line">        .and()</span><br><span class="line"></span><br><span class="line">            .formLogin().loginPage(&quot;/login&quot;).defaultSuccessUrl(&quot;/user&quot;)</span><br><span class="line"></span><br><span class="line">        .and()</span><br><span class="line"></span><br><span class="line">            .logout().logoutUrl(&quot;/logout&quot;).logoutSuccessUrl(&quot;/login&quot;);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>解决方案：代码中我们设置了仅能USER访问。但是通过debug调试发现。在Security底层时候会自动加上ROLE_USER来进行角色校验。因此在数据库的字段必须加上ROLE_前缀</p>
+
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/05/30/测试/Jmeter测试脚本编写/" class="pre-post btn btn-default" title="Jmeter测试脚本编写">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">Jmeter测试脚本编写</span>
+        </a>
+    
+    
+        <a href="/2019/05/22/Spring-Security-教程（五）---实现QQ授权登录/" class="next-post btn btn-default" title="Spring Security教程(五)--- 实现QQ授权登录">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">Spring Security教程(五)--- 实现QQ授权登录</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1、Spring-Security-登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。"><span class="toc-text">1、Spring Security 登录验证时候，表单name必须为username全小写。如果不一致会导致UserDetailsService的loadUserByUsername参数为空。</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2、不管是用户名不存在、密码错误等抛出的异常都是org-springframework-security-authentication-BadCredentialsException-Bad-credentials。"><span class="toc-text">2、不管是用户名不存在、密码错误等抛出的异常都是org.springframework.security.authentication.BadCredentialsException: Bad credentials。</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#方案一：（来自网络）"><span class="toc-text">方案一：（来自网络）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#方案二："><span class="toc-text">方案二：</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3、跳转到-user页面时候出现org-springframework-security-access-AccessDeniedException-Access-is-denied"><span class="toc-text">3、跳转到/user页面时候出现org.springframework.security.access.AccessDeniedException: Access is denied</span></a></li></ol>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>

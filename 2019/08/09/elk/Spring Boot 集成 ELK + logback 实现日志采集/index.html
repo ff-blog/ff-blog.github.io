@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <!--Setting-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta http-equiv="Cache-Control" content="no-transform">
+    <meta name="renderer" content="webkit|ie-comp|ie-stand">
+    <meta name="apple-mobile-web-app-capable" content="老亚瑟博客">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no,email=no,adress=no">
+    <meta name="browsermode" content="application">
+    <meta name="screen-orientation" content="portrait">
+    <meta name="baidu_union_verify" content="5769dfe781827376f8d664359a9b3f85">
+    <link rel="dns-prefetch" href="https://blog.ffspace.cn">
+    <script data-ad-client="ca-pub-9622623505672081" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <!--SEO-->
+
+    <meta name="keywords" content="Spring,Spring Boot,日志采集">
+
+
+    <meta name="description" content="ELK简介ELK是三个开源软件的缩写，分别表示：Elasticsearch , Logstash, Kibana , 它们都是开源软件。
+Elasticsearch：是个开源分布式搜索引擎，提供...">
+
+
+
+<meta name="robots" content="all">
+<meta name="google" content="all">
+<meta name="googlebot" content="all">
+<meta name="verify" content="all">
+
+    <!--Title-->
+
+
+<title>Spring Boot 集成 ELK + logback 实现日志采集 | 老亚瑟博客</title>
+
+
+    <link rel="alternate" href="/atom.xml" title="老亚瑟博客" type="application/atom+xml">
+
+
+    <link rel="icon" href="/favicon.ico">
+
+    
+
+
+
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<link rel="stylesheet" href="//cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="/css/style.css">
+
+
+
+
+    
+
+
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?bf2f6fc93694f8e23e0d5a7486619b27";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+
+    
+    <meta name="baidu-site-verification" content="老亚瑟 - 一个专注技术的亚瑟">
+
+
+    <script>
+        (function(){
+            var bp = document.createElement('script');
+            var curProtocol = window.location.protocol.split(':')[0];
+            if (curProtocol === 'https') {
+                bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';
+            }
+            else {
+                bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+            }
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(bp, s);
+        })();
+    </script>
+
+</head>
+
+</html>
+<!--[if lte IE 8]>
+<style>
+    html{ font-size: 1em }
+</style>
+<![endif]-->
+<!--[if lte IE 9]>
+<div style="ie">你使用的浏览器版本过低，为了你更好的阅读体验，请更新浏览器的版本或者使用其他现代浏览器，比如Chrome、Firefox、Safari等。</div>
+<![endif]-->
+
+<body>
+    <header class="main-header" style="background-image:url(/img/banner.jpg)">
+    <div class="main-header-box">
+        <a class="header-avatar" href="/" title="老亚瑟">
+            <img src="/img/avatar.jpg" alt="logo头像" class="img-responsive center-block">
+        </a>
+        <div class="branding">
+        	<!--<h2 class="text-hide">Snippet主题,从未如此简单有趣</h2>-->
+            
+                <h2> 编程从未如此简单有趣 </h2>
+            
+    	</div>
+    </div>
+</header>
+    <nav class="main-navigation">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="navbar-header"><span class="nav-toggle-button collapsed pull-right" data-toggle="collapse" data-target="#main-menu" id="mnav">
+                    <span class="sr-only"></span>
+                        <i class="fa fa-bars"></i>
+                    </span>
+                    <a class="navbar-brand" href="https://blog.ffspace.cn">老亚瑟博客</a>
+                </div>
+                <div class="collapse navbar-collapse" id="main-menu">
+                    <ul class="menu">
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/"><i class="fa "></i>首页</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/随笔/"><i class="fa "></i>随笔</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/前端/"><i class="fa "></i>前端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/后端/"><i class="fa "></i>后端</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/archives/"><i class="fa "></i>时间轴</a>
+                            </li>
+                        
+                            <li role="presentation" class="text-center">
+                                <a href="/categories/关于"><i class="fa "></i>关于</a>
+                            </li>
+                        
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+    <section class="content-wrap">
+        <div class="container">
+            <div class="row">
+                <main class="col-md-8 main-content m-post">
+                    <p id="process"></p>
+<article class="post">
+    <div class="post-head">
+        <h1 id="Spring Boot 集成 ELK + logback 实现日志采集">
+            
+	            Spring Boot 集成 ELK + logback 实现日志采集
+            
+        </h1>
+        <div class="post-meta">
+    
+        <span class="categories-meta fa-wrap">
+            <i class="fa fa-folder-open-o"></i>
+            <a class="category-link" href="/categories/后端/">后端</a> <a class="category-link" href="/categories/后端/Spring-Boot/">Spring Boot</a>
+        </span>
+    
+
+    
+        <span class="fa-wrap">
+            <i class="fa fa-tags"></i>
+            <span class="tags-meta">
+                
+                    <a class="tag-link" href="/tags/Spring/">Spring</a> <a class="tag-link" href="/tags/Spring-Boot/">Spring Boot</a> <a class="tag-link" href="/tags/日志采集/">日志采集</a>
+                
+            </span>
+        </span>
+    
+
+    
+        
+        <span class="fa-wrap">
+            <i class="fa fa-clock-o"></i>
+            <span class="date-meta">2019/08/09</span>
+        </span>
+        
+            <span class="fa-wrap">
+                <i class="fa fa-eye"></i>
+                <span id="busuanzi_value_page_pv"></span>
+            </span>
+        
+    
+</div>
+            
+            
+    </div>
+    
+    <div class="post-body post-content">
+        <h1 id="ELK简介"><a href="#ELK简介" class="headerlink" title="ELK简介"></a>ELK简介</h1><p>ELK是三个开源软件的缩写，分别表示：Elasticsearch , Logstash, Kibana , 它们都是开源软件。</p>
+<p>Elasticsearch：是个开源分布式搜索引擎，提供搜集、分析、存储数据三大功能。它的特点有：分布式，零配置，自动发现，索引自动分片，索引副本机制，restful风格接口，多数据源，自动搜索负载等。</p>
+<p>Logstash：主要是用来日志的搜集、分析、过滤日志的工具，支持大量的数据获取方式。一般工作方式为c/s架构，client端安装在需要收集日志的主机上，server端负责将收到的各节点日志进行过滤、修改等操作在一并发往elasticsearch上去。</p>
+<p>Kibana：也是一个开源和免费的工具，Kibana可以为 Logstash 和 ElasticSearch 提供的日志分析友好的 Web 界面，可以帮助汇总、分析和搜索重要数据日志。</p>
+<h1 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h1><p>1、jdk8</p>
+<p>2、elasticsearch-6.4.2.tar.gz 地址：<a href="https://www.elastic.co/downloads/elasticsearch" target="_blank" rel="noopener">https://www.elastic.co/downloads/elasticsearch</a></p>
+<p>3、logstash-6.4.2.tar.gz 地址：<a href="https://www.elastic.co/downloads/logstash" target="_blank" rel="noopener">https://www.elastic.co/downloads/logstash</a></p>
+<p>4、kibana-6.4.2-linux-x86_64.tar.gz 地址：<a href="https://www.elastic.co/downloads/kibana" target="_blank" rel="noopener">https://www.elastic.co/downloads/kibana</a></p>
+<h1 id="一、部署-配置ELK"><a href="#一、部署-配置ELK" class="headerlink" title="一、部署+配置ELK"></a>一、部署+配置ELK</h1><h4 id="安装-jdk"><a href="#安装-jdk" class="headerlink" title="安装 jdk"></a>安装 jdk</h4><p>linux 如何安装 jdk1.8 可参照其他网友贡献的文档  <a href="https://blog.csdn.net/qq250782929/article/details/51603276" target="_blank" rel="noopener">https://blog.csdn.net/qq250782929/article/details/51603276</a></p>
+<p>配置 jdk 环境变量</p>
+<pre><code>export JAVA_HOME=/usr/lib/jvm/jdk1.8.0_31 
+export JRE_HOME=${JAVA_HOME}/jre 
+export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib export PATH=${JAVA_HOME}/bin:$PATH 
+</code></pre><p>source /etc/profile 配置环境变量升效</p>
+<h4 id="安装-elasticsearch"><a href="#安装-elasticsearch" class="headerlink" title="安装 elasticsearch"></a>安装 elasticsearch</h4><p>elasticsearch 不能用root账户启动，因此，需要增加一个账户es</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd -m es</span><br><span class="line">passwd es </span><br><span class="line">es</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root#</span> tar -xvf elasticsearch-6.4.2.tar.gz</span><br><span class="line"></span><br><span class="line"><span class="meta">root#</span> cp -rf elasticsearch-6.4.2 /home/es</span><br><span class="line"></span><br><span class="line"><span class="meta">root#</span> chown -R es.es /home/es/elasticsearch-6.4.2</span><br><span class="line"></span><br><span class="line"><span class="meta">es$</span>  nohup /home/es/elasticsearch-6.4.2/bin/elasticsearch &amp;</span><br></pre></td></tr></table></figure>
+<p>启动过程遇到下问题</p>
+<p>`[1]: max file descriptors [4096] for elasticsearch process is too low, increase to at least [65536]</p>
+<p>`[2]: max virtual memory areas vm.max_map_count [65530] is too low, increase to at least [262144]</p>
+<p>请参照网友提供的解决方案：<br> <a href="https://blog.csdn.net/feinifi/article/details/73633235?utm_source=itdadao&amp;utm_medium=referral" target="_blank" rel="noopener">https://blog.csdn.net/feinifi/article/details/73633235?utm_source=itdadao&amp;utm_medium=referral</a></p>
+<p>`[3]: max number of threads [3895] for user [elk] is too low, increase to at least [4096]</p>
+<p>修改/etc/security/limits.conf文件，添加或修改如下行：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">*        hard    nproc           4096</span><br><span class="line">*        soft    nproc           4096</span><br></pre></td></tr></table></figure></p>
+<p>重新启动<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">es$</span>  nohup /home/es/elasticsearch-6.4.2/bin/elasticsearch &amp;</span><br></pre></td></tr></table></figure></p>
+<p>更多elasticsearch配置<br><a href="https://www.elastic.co/guide/en/elasticsearch/reference/current/logging.html" target="_blank" rel="noopener">https://www.elastic.co/guide/en/elasticsearch/reference/current/logging.html</a></p>
+<h4 id="安装-logstash"><a href="#安装-logstash" class="headerlink" title="安装 logstash"></a>安装 logstash</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">useradd -m elk</span><br><span class="line">passwd elk </span><br><span class="line">elk</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">root#</span> tar -zxvf logstash-6.1.0.tar.gz</span><br><span class="line"><span class="meta">root#</span> cp -rf logstash-6.1.0/home/elk</span><br><span class="line"><span class="meta">root#</span> chown -R elk.elk /home/elk/logstash-6.1.0</span><br><span class="line"><span class="meta">elk$</span>  touch /home/elk/logstash-6.1.0/config/logstash-simple.conf</span><br><span class="line"><span class="meta">elk$</span> ./bin/logstash -f ./config/logstash-simple.conf</span><br></pre></td></tr></table></figure>
+<p>在config 下配置一个simple.conf配置文件</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">input &#123;</span><br><span class="line">  tcp &#123;</span><br><span class="line">    mode =&gt; &quot;server&quot;</span><br><span class="line">    host =&gt; &quot;本机ip&quot;</span><br><span class="line">    port =&gt; 9250</span><br><span class="line">  &#125;</span><br><span class="line">  stdin &#123;&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">filter &#123;</span><br><span class="line"> </span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">output &#123;</span><br><span class="line">  elasticsearch &#123;</span><br><span class="line">    action =&gt; &quot;index&quot;         </span><br><span class="line">    hosts  =&gt; &quot;ip:9200&quot;   </span><br><span class="line">	index =&gt; &quot;logstash-demo&quot;</span><br><span class="line">  &#125;</span><br><span class="line">  stdout &#123;</span><br><span class="line">    codec =&gt; rubydebug  </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h4 id="安装-kinbana"><a href="#安装-kinbana" class="headerlink" title="安装 kinbana"></a>安装 kinbana</h4><p>使用命令解压（根据自己的文件名称进行解压）：<br>tar -zxvf kibana-6.4.2-linux-x86_64.tar.gz</p>
+<p>修改配置文件:<br>cd /kibana/kibana-6.4.2-linux-x86_64/config/kibana.yml</p>
+<p>【修改标注的这三个参数即可】<br>    server.port: 5601   端口<br>    server.host: （linux对应的ip地址）<br>    elasticsearch.url: “<a href="http://xxx.xxx.xxx.xxx:9200&quot;（根据es配置地址和端口进行配置）" target="_blank" rel="noopener">http://xxx.xxx.xxx.xxx:9200&quot;（根据es配置地址和端口进行配置）</a></p>
+<p>启动：返回解压后<br>cd /kibana/kibana-6.4.2-linux-x86_64/bin </p>
+<p>执行：<br>./kibana  //不能关闭终端<br>nohup  ./kibana &gt; /nohub.out &amp;  //可关闭终端，在nohup.out中查看log</p>
+<h5 id="备注：如果不能正常访问则使用firewall开放linux端口"><a href="#备注：如果不能正常访问则使用firewall开放linux端口" class="headerlink" title="备注：如果不能正常访问则使用firewall开放linux端口"></a>备注：如果不能正常访问则使用firewall开放linux端口</h5><p>1、执行如下命令命令：firewall-cmd –zone=public –add-port=5601/tcp –permanent</p>
+<p>2、重启防火墙，运行命令：firewall-cmd –reload</p>
+<p>3、查看端口号是否开启，运行命令：firewall-cmd –query-port=5601/tcp</p>
+<h1 id="二、如何在Logback-xml中集成logstash"><a href="#二、如何在Logback-xml中集成logstash" class="headerlink" title="二、如何在Logback.xml中集成logstash"></a>二、如何在Logback.xml中集成logstash</h1><h4 id="1、在pom文件中引入jar包"><a href="#1、在pom文件中引入jar包" class="headerlink" title="1、在pom文件中引入jar包"></a>1、在pom文件中引入jar包</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> &lt;parent&gt;</span><br><span class="line">    &lt;groupId&gt;org.springframework.boot&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;spring-boot-starter-parent&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;2.0.5.RELEASE&lt;/version&gt;</span><br><span class="line">    &lt;relativePath/&gt;</span><br><span class="line">&lt;/parent&gt;</span><br><span class="line">&lt;dependency&gt;</span><br><span class="line">    &lt;groupId&gt;net.logstash.logback&lt;/groupId&gt;</span><br><span class="line">    &lt;artifactId&gt;logstash-logback-encoder&lt;/artifactId&gt;</span><br><span class="line">    &lt;version&gt;5.2&lt;/version&gt;</span><br><span class="line">&lt;/dependency&gt;</span><br></pre></td></tr></table></figure>
+<h4 id="2、在logback-spring-xml中配置"><a href="#2、在logback-spring-xml中配置" class="headerlink" title="2、在logback-spring.xml中配置"></a>2、在logback-spring.xml中配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">&lt;configuration&gt;</span><br><span class="line">    &lt;!-- 使用下方日志输出格式必须引入默认的xml --&gt;</span><br><span class="line">    &lt;include resource=&quot;org/springframework/boot/logging/logback/defaults.xml&quot;/&gt;</span><br><span class="line">    &lt;springProperty scope=&quot;context&quot; name=&quot;springAppName&quot; source=&quot;spring.application.name&quot;/&gt;</span><br><span class="line">    </span><br><span class="line">    &lt;!-- 控制台的日志输出样式 --&gt;</span><br><span class="line">    &lt;property name=&quot;CONSOLE_LOG_PATTERN&quot;</span><br><span class="line">              value=&quot;$&#123;CONSOLE_LOG_PATTERN:-%clr(%d&#123;yyyy-MM-dd HH:mm:ss.SSS&#125;)&#123;faint&#125; %clr($&#123;LOG_LEVEL_PATTERN:-%5p&#125;)</span><br><span class="line">              %clr($&#123;PID:- &#125;)&#123;magenta&#125; %clr(---)&#123;faint&#125; %clr([%15.15t])&#123;faint&#125; %clr(%-40.40logger&#123;39&#125;)&#123;cyan&#125;</span><br><span class="line">              %clr(:)&#123;faint&#125; %m%n$&#123;LOG_EXCEPTION_CONVERSION_WORD:-%wEx&#125;&#125;&quot; /&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- 控制台输出 --&gt;</span><br><span class="line">    &lt;appender name=&quot;console&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">        &lt;!-- 日志输出编码 --&gt;</span><br><span class="line">        &lt;encoder&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;CONSOLE_LOG_PATTERN&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;appender name=&quot;STDERR&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;</span><br><span class="line">        &lt;target&gt;System.err&lt;/target&gt;</span><br><span class="line">        &lt;encoder&gt;</span><br><span class="line">            &lt;pattern&gt;$&#123;CONSOLE_LOG_PATTERN&#125;&lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;!-- This is the kafkaAppender --&gt;</span><br><span class="line">    &lt;appender name=&quot;kafkaAppender&quot; class=&quot;com.github.danielwegener.logback.kafka.KafkaAppender&quot;&gt;</span><br><span class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;</span><br><span class="line">            &lt;level&gt;INFO&lt;/level&gt;</span><br><span class="line">        &lt;/filter&gt;</span><br><span class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;</span><br><span class="line">            &lt;pattern&gt;</span><br><span class="line">                &#123;</span><br><span class="line">                &quot;severity&quot;: &quot;%level&quot;,</span><br><span class="line">                &quot;service&quot;: &quot;$&#123;springAppName:-&#125;&quot;,</span><br><span class="line">                &quot;trace&quot;: &quot;%X&#123;X-B3-TraceId:-&#125;&quot;,</span><br><span class="line">                &quot;span&quot;: &quot;%X&#123;X-B3-SpanId:-&#125;&quot;,</span><br><span class="line">                &quot;exportable&quot;: &quot;%X&#123;X-Span-Export:-&#125;&quot;,</span><br><span class="line">                &quot;pid&quot;: &quot;$&#123;PID:-&#125;&quot;,</span><br><span class="line">                &quot;thread&quot;: &quot;%thread&quot;,</span><br><span class="line">                &quot;class&quot;: &quot;%logger&#123;40&#125;&quot;,</span><br><span class="line">                &quot;message&quot;: &quot;%message&quot;</span><br><span class="line">                &#125;</span><br><span class="line">            &lt;/pattern&gt;</span><br><span class="line">        &lt;/encoder&gt;</span><br><span class="line">        &lt;topic&gt;topic-logback&lt;/topic&gt;</span><br><span class="line">        &lt;keyingStrategy class=&quot;com.github.danielwegener.logback.kafka.keying.NoKeyKeyingStrategy&quot; /&gt;</span><br><span class="line">        &lt;deliveryStrategy class=&quot;com.github.danielwegener.logback.kafka.delivery.AsynchronousDeliveryStrategy&quot; /&gt;</span><br><span class="line">        &lt;!-- Optional parameter to use a fixed partition --&gt;</span><br><span class="line">        &lt;!-- &lt;partition&gt;0&lt;/partition&gt; --&gt;</span><br><span class="line">        &lt;!-- Optional parameter to include log timestamps into the kafka message --&gt;</span><br><span class="line">        &lt;!-- &lt;appendTimestamp&gt;true&lt;/appendTimestamp&gt; --&gt;</span><br><span class="line">        &lt;!-- bootstrap.servers is the only mandatory producerConfig --&gt;</span><br><span class="line">        &lt;producerConfig&gt;bootstrap.servers=ip:9092&lt;/producerConfig&gt;</span><br><span class="line">        &lt;!-- this is the fallback appender if kafka is not available. --&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;STDERR&quot; /&gt;</span><br><span class="line">    &lt;/appender&gt;</span><br><span class="line"></span><br><span class="line">    &lt;root level=&quot;INFO&quot;&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;console&quot;/&gt;</span><br><span class="line">        &lt;appender-ref ref=&quot;kafkaAppender&quot;/&gt;</span><br><span class="line">    &lt;/root&gt;</span><br><span class="line">&lt;/configuration&gt;</span><br></pre></td></tr></table></figure>
+<p>注意：配置文件中的<topic></topic>必须在logstash配置文件topic或topic-pattern能够匹配到才会从kafka读取到消息</p>
+<h1 id="配置完成后启动"><a href="#配置完成后启动" class="headerlink" title="配置完成后启动"></a>配置完成后启动</h1><p>1、启动elk：elasticsearch -&gt; logstash -&gt; kibana 必须根据启动顺序进行启动</p>
+<p>2、测试发送日志</p>
+<blockquote>
+<p><strong>推荐阅读：</strong><br><a href="https://blog.ffspace.cn/categories/%E5%90%8E%E7%AB%AF/Spring-Security/">Spring Security系列教程</a></p>
+</blockquote>
+
+    </div>
+    
+        <div class="reward" ontouchstart>
+    <div class="reward-wrap">赏
+        <div class="reward-box">
+            
+                <span class="reward-type">
+                    <img class="alipay" src="/img/reward-alipay.jpg"><b>支付宝打赏</b>
+                </span>
+            
+            
+                <span class="reward-type">
+                    <img class="wechat" src="/img/reward-weipay.jpg"><b>微信打赏</b>
+                </span>
+            
+        </div>
+    </div>
+    <p class="reward-tip">扫码打赏，你说多少就多少</p>
+</div>
+
+
+    
+    <!-- 分享功能 -->
+    <div class="hidden-md hidden-lg">
+      
+             <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        
+    </div>
+    <div class="post-footer visible-xs visible-sm visible-md visible-lg">
+        <div>
+           <!-- <img src="/img/resources/640.jpg" style="margin-right:10px;float:left" width="100px" height="100px"> -->
+             <p style="line-height: 50px;">
+                  
+                     转载声明：转载请注明出处 © <a href="#" target="_blank">老亚瑟</a>
+                  
+             </p>
+            <!-- <p>
+             关注获取最新技术干货和免费资料
+            </p> -->
+        </div>
+        <div>
+          
+        </div>
+    </div>
+</article>
+
+<div class="article-nav prev-next-wrap clearfix">
+    
+        <a href="/2019/08/11/RabbitMQ 3.7快速安装教程/" class="pre-post btn btn-default" title="RabbitMQ 3.7快速安装教程">
+            <i class="fa fa-angle-left fa-fw"></i><span class="hidden-lg">上一篇</span>
+            <span class="hidden-xs">RabbitMQ 3.7快速安装教程</span>
+        </a>
+    
+    
+        <a href="/2019/06/12/如何快速在github上创建新分支/" class="next-post btn btn-default" title="如何快速在github上创建新分支">
+            <span class="hidden-lg">下一篇</span>
+            <span class="hidden-xs">如何快速在github上创建新分支</span><i class="fa fa-angle-right fa-fw"></i>
+        </a>
+    
+</div>
+
+
+<div id="comments">
+        
+	
+    <div id="vcomments" class="valine"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+<script src="/assets/valine.min.js"></script>
+
+    <script>
+        new Valine({
+            av: AV,
+            el: '#vcomments',
+            appId: 'z2kepYx3oMLI860Alv7mYcF3-gzGzoHsz',
+            appKey: 'JthKPI4yPyXr6oKqKiHnsUII',
+            placeholder: '说点什么吧',
+            notify: false,
+            verify: false,
+            avatar: 'mm',
+            meta: 'nick,mail'.split(','),
+            pageSize: '10',
+            path: window.location.pathname,
+            lang: 'zh-CN'.toLowerCase()
+        })
+    </script>
+
+
+</div>
+
+
+
+
+
+
+                </main>
+                <!-- 右侧面板 -->
+                 
+                    <!-- 分享面板，若文章列表有开启，则使用文章列表固定样式 -->
+
+   <aside id="article-toc-share" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+        <div class="widget">
+           <h3 class="title">分享文章</h3>
+            <div class="bar-right">
+      <div class="share-component" data-sites="weibo,qq,wechat,qzone,douban" data-mobile-sites="weibo,qq,qzone,wechat,douban"></div>
+ </div>
+
+        </div>
+   </aside>
+
+
+                 
+
+                 
+                      <aside id="article-toc" role="navigation" class="col-md-4 hidden-xs hidden-sm">
+    <div class="widget">
+        <h3 class="title">文章目录</h3>
+        
+            <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#ELK简介"><span class="toc-text">ELK简介</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#环境"><span class="toc-text">环境</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#一、部署-配置ELK"><span class="toc-text">一、部署+配置ELK</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-jdk"><span class="toc-text">安装 jdk</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-elasticsearch"><span class="toc-text">安装 elasticsearch</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-logstash"><span class="toc-text">安装 logstash</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#安装-kinbana"><span class="toc-text">安装 kinbana</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#备注：如果不能正常访问则使用firewall开放linux端口"><span class="toc-text">备注：如果不能正常访问则使用firewall开放linux端口</span></a></li></ol></li></ol></li></ol><li class="toc-item toc-level-1"><a class="toc-link" href="#二、如何在Logback-xml中集成logstash"><span class="toc-text">二、如何在Logback.xml中集成logstash</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1、在pom文件中引入jar包"><span class="toc-text">1、在pom文件中引入jar包</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2、在logback-spring-xml中配置"><span class="toc-text">2、在logback-spring.xml中配置</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#配置完成后启动"><span class="toc-text">配置完成后启动</span></a></li>
+        
+    </div>
+</aside>
+
+                 
+
+            </div>
+        </div>
+    </section>
+    <footer class="main-footer">
+    <div class="container">
+        <div class="row">
+        </div>
+    </div>
+</footer>
+
+<a id="back-to-top" class="icon-btn hide">
+	<i class="fa fa-chevron-up"></i>
+</a>
+
+
+
+
+    <div class="copyright">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="busuanzi">
+    
+</div>
+
+            </div>
+            <div class="col-sm-12">
+                <span>Copyright &copy; 2019
+                </span> |
+                <span>
+                    <a href="/" class="copyright-links" target="_blank">www.fhspace.cn</a> All rights reserved.
+                 <a href="http://www.beian.miit.gov.cn" class="copyright-links" target="_blank">粤ICP备19080332号</a>
+                </span> |
+                <span>
+                    Theme by <a href="//github.com/shenliyang/hexo-theme-snippet.git" class="copyright-links" target="_blank" rel="nofollow">Snippet</a>
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+    <script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+<script src="/js/app.js"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/plugin.min.js"></script>
+
+</body>
+</html>
